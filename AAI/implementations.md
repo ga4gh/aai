@@ -8,7 +8,7 @@ permalink: aai-implementations
 
 ![this](AAI/LifeScienceAAI.drawio.svg)
 
-## NIH RAS
+## NIH Researcher Auth Service (RAS)
 
 ![this](AAI/nih-ras.drawio.svg)
 
