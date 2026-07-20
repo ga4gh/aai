@@ -367,6 +367,8 @@ To improve the auditability of authorization flows, speed revocations, and addre
 a Passport. This necessarily shifts additional communication burden back to the Broker (similar to AAI v1.0, where a Passport Clearinghouse retrieved a list of Visas from the Broker) as the services that receive a token
 must communicate with the Broker to introspect the token to determine (1) token validity and (2) the set of Visas associated with the token.
 
+<img title="lifecycle" alt="lifecycle" width="50%" src="AAI/assets/TSTs_basic_example.png">
+
 As a motivating example, consider the situation where a Client would like to instantiate a workflow on behalf of a user:
 
 @startuml
@@ -435,7 +437,11 @@ manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this
 flag be such that it is consumed at each step--i.e,. each token exchange MUST set *allow_delegation* to be true for the receiving service to be able to perform a downstream token
 exchange.
 
-After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker's /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection). An example request is as follows:
+After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker's /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection) or simply forward it along without introspection. The following figure illustrates a scenario where WES, TES, and DRS are used to execute a federated learning workflow by passing along a TST. As we note later, this TST may be the original one issued to the client, or a TST what was issued to a downstream service (e.g., WES or TES) that reduces the scope of the token (either Visas or *audience*/*resources*) further.
+
+<img title="lifecycle" alt="lifecycle" width="70%" src="AAI/assets/federated_learning_w_TSTs.png">
+
+An example introspection request is as follows:
 ```
 POST https://broker.example.org/introspect
 Content-Type: application/x-www-form-urlencoded
@@ -457,7 +463,7 @@ where the *client_assertion* JWT is
 }
 ```
 Assuming that the ecosystem uses client credentials, the Broker is able to retrieve the service's public key and verify the signature on the *client_assertion* JWT and also determine that
-the holder of the Task-Specific Token aligns with the specific *audience*/*resource* requirements of the token creation request. The *claims* key in the introspection request indicates
+the holder of the Task-Specific Token aligns with the specific *audience*/*resources* requirements of the token creation request. The *claims* key in the introspection request indicates
 if the requestor is an orchestrating intermediary (if *claims* is false) or an authorization consumer that would require the GA4GH Visas to make authorization decisions. In the former case,
 the /introspect endpoint returns
 ```
@@ -496,7 +502,7 @@ If Visas are required, the introspection request returns:
   ]
 }
 ```
-Note that this response includes an *act* claim that indicates a chain of token exchanges (see sequence diagram, below).
+Note that this response includes an *act* claim that implies a chain of token exchanges (see sequence diagram, below).
 
 {% plantuml %}
 
