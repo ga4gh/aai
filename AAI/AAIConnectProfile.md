@@ -1240,6 +1240,7 @@ into consideration. Of special concern are:
 
 | Version       | Date    | Editor                                                                | Notes                                                                            |
 |---------------|---------|-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| 2.0.0 | 2026-07 | Andrew Gearhart, Tom Conner, Jaime Delgado | Refactors documentation, adds new features (e.g.,task-specific tokens) |
 | 1.2.0 | 2023-01 | Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley | Introduce token exchange and Passport format, incorporate Visas, update diagrams |
 | 1.1.0         | 2021-07 | Craig Voisin                                                          | *abandoned* version now reserved, new concepts moved to v1.2                     |
 | 1.0.4         | 2021-07 | Craig Voisin                                                          | Improve existing terminology and define Passport and Visa JWTs                   |
