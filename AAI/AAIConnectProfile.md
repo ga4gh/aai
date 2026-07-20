@@ -426,12 +426,12 @@ Note that this example also assumes that a Client has already received a user's 
   "scope": "ga4gh_passport_v1"
 }
 ```
-There are some interesting features in the original request:
+There are some interesting aspects of the initial token exchange request:
 * The Client specifies the specific *audience* for the token, such as the hostname of the WES server. According to RFX 8693, the *resource* claim may be used in a similar
 manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this audience information will be stored by the Broker and used to make introspection decisions.
  * Note that the Broker must have some method of identifying a particular service as identified via *audience* or *resource* so as to enforce use of a Task-Specific Token only
- by intended services. This could be implemented via the client credentials flow (RFC 6749, Section 4.4) as shown in the example below. We regard the details of realizing client credentials
- within a particular ecosystem, e.g., managing service registration and key management, as implementation decisions that are outside of this specification.
+ by intended services. This could be implemented via the client credentials flow (RFC 6749, Section 4.4). We consider the details of implementing client credentials
+ within a particular ecosystem, e.g., managing service registration and key management, as decisions that are outside of this specification.
 * We see a new value of *requested_token_type*, *task_specific*.
 * The Client is explicitly allowing the audience to exchange the token for other tokens via the *allow_delegation* claim, either with different audiences or for fewer Visas. We recommend that the behavior of this
 flag be such that it is consumed at each step--i.e,. each token exchange MUST set *allow_delegation* to be true for the receiving service to be able to perform a downstream token
@@ -558,12 +558,13 @@ tes <- clearing : Clearinghouse makes access decision and responds with data
 {% endplantuml %}
 
 Each exchange is tracked by the Broker as indicated by the *aud* claim--showing a chain of delegation from the client to a TES server, which uses the final Task-Specific Token to access data via DRS. See RFC 8693 (OAuth 2.0 Token Exchange) for details on the use of *aud*.  Some additional points:
-* If an orchestrating intermediary is only creating a new token for downstream use (e.g., to update the audience and *aud*), it does not need to make an explicit introspection request prior to a token exchange. Instead, it could submit a token exchange request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service. This is shown in the above diagram.
-The intermediary cannot skip introspection, however, if it needs to dynamically determine the set of Visas within the request for further de-scoping, to reason about the delegation chain in *aud*, or to debug a failed token exchange.
-* The above example, with multiple token exchanges used to establish a chain of delegation, could be simplified by the Client including the required TES and DRS servers in *audience* during the first token exchange request. In that case, the
-Task-Specific Token could be forwarded through the intermediaries to the DRS server with fewer Broker interactions--at the cost of being able to analyze the chain of delegation. If token verification is desired, WES and TES have the opportunity to introspect the token via the Broker.
-* Internally, the Broker may maintain its own mapping between Task-Specific Token requests, Visas, and registered services.
-* In theory, the chain of delegation shown via *act* has been explicitly consented by the user. Future work may explore the use of Rich Authorization Requests (RAR, RFC 9396) to do this, where a set of authorized services is included
+* If an orchestrating intermediary is only creating a new token for downstream use (e.g., to update the *audience*), it does not need to make an explicit introspection request prior to a token exchange. Instead, it has two options:
+  * It could submit a token exchange request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service. This is shown in the above diagram.
+  * The above example, with multiple token exchanges used to establish a chain of delegation, could be simplified by the Client including the required TES and DRS servers in *audience* during the first token exchange request. The orchestrating intermediary could then forward the TST without changes, assuming that an invalid token would be detected by an authorization consumer later.
+* Internally, the Broker maintains a mapping between Task-Specific Token requests, Visas, and registered services.
+
+#### Future Considerations for Task-Specific Tokens
+In theory, the chain of delegation shown via *act* has been explicitly consented by the user. Future work may explore the use of Rich Authorization Requests (RAR, RFC 9396) to do this, where a set of authorized services is included
 in the initial OIDC authorization request to the Broker:
 ```
 {
@@ -611,11 +612,12 @@ This set of services could be cached by the Broker, used to authorize token exch
 Note that even with the use of RAR, the user is still trusting the Client to perform actions correctly on their behalf, the Broker to respect consent and *audience*, and on Clearinghouses to
 make proper access decisions. As mentioned earlier within the discussion regarding client credentials, this suggests that a robust method of registering trusted services be part of any production
 AAI implementation.
-* Finally, future extensions may also consider the use of Distributed Proof of Possession (DPoP) to allow token holders to demonstrate to receivers that they were the service that was
+
+Finally, future extensions may also consider the use of Distributed Proof of Possession (DPoP) to allow token holders to demonstrate to receivers that they were the service that was
 actually issued the token. This extends the protection of client credentials, which only suffice to confirm the identity of a service in a manner that is not tied to a particular token.
 
-
-In AAI v1.1, a Passport holder directly *pushes* visas to the Clearinghouse, bypassing the Broker.  As noted previously, the inclusion of Task-Specific Tokens in AAI v2.0 represents a shift
+### Discussion
+In AAI v1.1+, a Passport holder directly *pushes* visas to the Clearinghouse, bypassing the Broker.  As noted previously, the inclusion of Task-Specific Tokens in AAI v2.0 represents a shift
 back toward the AAI v1.0 architecture--where a Clearinghouse *pulls* visas from the Broker prior to making a decision. A key design decision for AAI v2.0, however, is that the Task-Specific Token
 may be scoped to the specific subset of Visas required for a particular task--reducing disclosure of user information to downstream services while shifting the burden of transferring a potentially
 large set of Visas to backend communications that do not require fundamental changes to user-facing APIs. In other words, a Task-Specific Token would allow use of GET-based API requests even when many Visas
@@ -623,8 +625,8 @@ are needed to complete the request.
 
 An ecosystem that relies heavily on Task-Specific Tokens will necessarily include additional interactions with the Broker. This additional load can be mitigated via several implementation strategies:
 * Brokers should be deployed as highly-available resources--horizonally-scaled and behind a load balancer, with token bindings and Visas cached in a replicated backend store.
-* Introspection responses (including Visas) could be intelligently cached by services, reducing the need for repeated introspection requests. This approach would likely require careful attention to
-introspection expiration times and would involve some associated reduction in the Broker's ability to communicate Visa invalidations to downstream services.
+* Introspection responses (including Visas) could be intelligently cached by services, reducing the need for repeated introspection requests. This approach would likely require attention to
+introspection expiration times and would involve an associated reduction in the Broker's ability to communicate Visa invalidations to downstream services.
 * Brokers may also be federated, separating the tasks of Visa collection and Passport Issuance from that of Task-Specific Token management. This may be especially effective in situations where a Broker is able to delegate
 Task-Specific Token management to a trusted service associated with a particular ecosystem (e.g., NIH's Cancer Data Commons, which is a number of separate data repositories and services under the ownership of the National
 Cancer Institute). This token management service would then issue and allow for introspection of tokens on behalf of the Broker, greatly reducing individual Broker communications at the cost of some degree of state
