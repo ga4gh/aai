@@ -341,7 +341,7 @@ client <- clearing : Clearinghouse responds with data
 
 {% endplantuml %}
 
-The Client may also exchange a Passport-Scoped Access Token for aa Passport that contains a subset of Visas. For example, it may submit the following request to the Broker and Passport Issuer's /token endpoint:
+The Client may also exchange a Passport-Scoped Access Token for a Passport that contains a subset of Visas. For example, it may submit the following request to the Broker and Passport Issuer's /token endpoint:
 
 ```
 POST https://broker.example.org/token
@@ -431,6 +431,7 @@ Note that this example also assumes that a Client has already received a user's 
   "scope": "ga4gh_passport_v1"
 }
 ```
+
 There are some interesting aspects of the initial token exchange request:
 * The Client specifies the specific *audience* for the token, such as the hostname of the WES server. According to RFX 8693, the *resource* claim may be used in a similar
 manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this audience information will be stored by the Broker and used to make introspection decisions.
@@ -441,7 +442,21 @@ manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this
 * The Client is explicitly allowing the audience to exchange the token for other tokens via the *allow_delegation* claim, either with different audiences or for fewer Visas. We the behavior of this
 claim is such that it is consumed at each token exchange step--i.e,. each token exchange MUST set *allow_delegation* to be true for the receiving service to be able to perform a downstream exchange.
 
-After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker's /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection) or simply forward it along without introspection. The following figure illustrates a scenario where WES, TES, and DRS are used to execute a federated learning workflow by passing along a TST. As we note later, this TST may be the original one issued to the client, or a TST what was issued to a downstream service (e.g., WES or TES) that reduces the scope of the token (either Visas or *audience*/*resources*) further.
+After receiving the Task-Specific Token, the Client (or another downstream service) may send API requests that include it. This may be done using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. This said, use of the Authorization field may be problematic in general as the Client may need to perform a third-party OIDC exchange to obtain a token that specifically grants it access to the downstream API. In this case, the TST could be included in API requests as a claim within a fixed-size JWT that is sent via an optional *GA4GH-Workflow-Context* field within the HTTP header. For example, the structure of this JWT could be:
+
+```
+{
+  "iss": "https://client.example.org",
+  "iat": 1234567890,
+  "exp": 1234567890,
+  "task_token_issuer": "https://broker.example.org",
+  "tst": "uY29ssbFm3_Kq7pk2zH8dR4tNwXvLoaE"
+}
+```
+We note that support for *GA4GH-Workflow-Context* would require a small change to the user-facing API of receiving services (e.g., DRS or WES), but argue that this change would require lower effort than modifications to support POSTing passports for read-only operations. Further, by keeping this JWT constant size we preserve the goal of not having API requests scale in size with the scope of the request's authorizations (i.e., the applicable visas). With support for this field, a Client can send a token to access the receiving service via the typical Authorization field while also sending along a reference to the authorization scope of the request (i.e., the TST).
+
+
+Once the Task-Specific Token is received (either via the Authorization field or an optional *GA4GH-Workflow-Context* header field, the receiving service can verify the Task-Specific Token via the Broker's /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection) or simply forward it along without introspection. The following figure illustrates a scenario where WES, TES, and DRS are used to execute a federated learning workflow by passing along a TST. As we note later, this TST may be the original one issued to the client, or a TST what was issued to a downstream service (e.g., WES or TES) that reduces the scope of the token (either Visas or *audience*/*resources*) further. Note that this is another situation where some service-to-service authentication is required--the receiving service should never blindly follow the issuer URL in search of an introspection endpoint. Instead, the URL used be used as an internal lookup for a known broker that is associated with trusted endpoint information.
 
 <img title="lifecycle" alt="lifecycle" width="70%" src="AAI/assets/federated_learning_w_TSTs.png">
 
