@@ -301,19 +301,22 @@ Assume we have a researcher running a workflow using an orchestrator (WES) along
 ```mermaid
 graph LR
 
-    R["LLM"]
-    MCP
+    R["Researcher"]
     WES["WES\nOrchestrator"]
     TES["TES\nWorker"]
     DRS[DRS]
     S3["Storage (S3)"]
 
-    R --> MCP
-    MCP --> WES
+    R --> WES
     WES --> TES
     TES --> DRS
     DRS --> S3
     TES --> S3
+    R["Researcher"]
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
 ```
 
 One way to do it: WES calls the Authorization Server to exchange the User Token for a token scoped to the TES and DRS services.
@@ -346,28 +349,51 @@ sequenceDiagram
     S3-->>TES: Stream Object Data
 ```
 
-### What if you have an agent or MCP server acting on behalf of the researcher?
+### What if you have an agent acting on behalf of the researcher?
 
-If we just add an MCP server to the previous sceenario:
+If we have an agent and MCP server acting on behalf of the researcher in the previous scenario:
 
 ```mermaid
 graph LR
 
-    R["LLM"]
+    R["Researcher"]
+    Agent
     MCP
     WES["WES\nOrchestrator"]
     TES["TES\nWorker"]
     DRS[DRS]
     S3["Storage (S3)"]
 
-    R --> MCP
+    R --> Agent --> MCP --> WES
+    WES --> TES
+    TES --> DRS
+    DRS --> S3
+    TES --> S3
+```
+
+With an MCP server in front of WES, it would be much the same, but you'd get another token to the MCP server, or you'd have it running on a service account that impersonates the user. Either way, the agent harness would have to authenticate to the MCP with the help of the user. The MCP would pass its identity to WES and WES would work the same.
+
+```mermaid
+graph LR
+
+    R["Researcher"]
+    Agent
+    MCP
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+
+    R -- prompt --> Agent
+    R -- configure\nMCP client\nto authorize\nMCP --> MCP
+    Agent --> MCP
     MCP --> WES
     WES --> TES
     TES --> DRS
     DRS --> S3
-    TES --> S3```
+    TES --> S3
+```
 
-With an MCP server in front, it would be much the same, but you'd get another token to the MCP server, or you'd have it running on a service account that impersonates the user. Either way, the MCP would pass its identity to WES and WES would work the same.
 ## Trust
 
 ### What's with all the signed passports and visas etc? Why so complex?
