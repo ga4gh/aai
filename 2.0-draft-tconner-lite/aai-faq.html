@@ -388,19 +388,22 @@ JSON format.</p>
 
 <pre><code class="language-mermaid">graph LR
 
-    R["LLM"]
-    MCP
+    R["Researcher"]
     WES["WES\nOrchestrator"]
     TES["TES\nWorker"]
     DRS[DRS]
     S3["Storage (S3)"]
 
-    R --&gt; MCP
-    MCP --&gt; WES
+    R --&gt; WES
     WES --&gt; TES
     TES --&gt; DRS
     DRS --&gt; S3
     TES --&gt; S3
+    R["Researcher"]
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
 </code></pre>
 
 <p>One way to do it: WES calls the Authorization Server to exchange the User Token for a token scoped to the TES and DRS services.</p>
@@ -432,93 +435,113 @@ JSON format.</p>
     S3--&gt;&gt;TES: Stream Object Data
 </code></pre>
 
-<h3 id="what-if-you-have-an-agent-or-mcp-server-acting-on-behalf-of-the-researcher">What if you have an agent or MCP server acting on behalf of the researcher?</h3>
+<h3 id="what-if-you-have-an-agent-acting-on-behalf-of-the-researcher">What if you have an agent acting on behalf of the researcher?</h3>
 
-<p>If we just add an MCP server to the previous sceenario:</p>
+<p>If we have an agent and MCP server acting on behalf of the researcher in the previous scenario:</p>
 
 <pre><code class="language-mermaid">graph LR
 
-    R["LLM"]
+    R["Researcher"]
+    Agent
     MCP
     WES["WES\nOrchestrator"]
     TES["TES\nWorker"]
     DRS[DRS]
     S3["Storage (S3)"]
 
-    R --&gt; MCP
+    R --&gt; Agent --&gt; MCP --&gt; WES
+    WES --&gt; TES
+    TES --&gt; DRS
+    DRS --&gt; S3
+    TES --&gt; S3
+</code></pre>
+
+<p>With an MCP server in front of WES, it would be much the same, but you’d get another token to the MCP server, or you’d have it running on a service account that impersonates the user. Either way, the agent harness would have to authenticate to the MCP with the help of the user. The MCP would pass its identity to WES and WES would work the same.</p>
+
+<pre><code class="language-mermaid">graph LR
+
+    R["Researcher"]
+    Agent
+    MCP
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+
+    R -- prompt --&gt; Agent
+    R -- configure\nMCP client\nto authorize\nMCP --&gt; MCP
+    Agent --&gt; MCP
     MCP --&gt; WES
     WES --&gt; TES
     TES --&gt; DRS
     DRS --&gt; S3
-    TES --&gt; S3```
+    TES --&gt; S3
+</code></pre>
 
-With an MCP server in front, it would be much the same, but you'd get another token to the MCP server, or you'd have it running on a service account that impersonates the user. Either way, the MCP would pass its identity to WES and WES would work the same.
-## Trust
+<h2 id="trust">Trust</h2>
 
-### What's with all the signed passports and visas etc? Why so complex?
+<h3 id="whats-with-all-the-signed-passports-and-visas-etc-why-so-complex">What’s with all the signed passports and visas etc? Why so complex?</h3>
 
-(last updated July 2022)
+<p>(last updated July 2022)</p>
 
-The practical operation of a loosely coupled
+<p>The practical operation of a loosely coupled
 federated ecosystem like GA4GH Passports requires establishing trust
 relationships between the participating entities (see
-[OpenID Connect Federation](https://openid.net/specs/openid-connect-federation-1_0.html)
-for an interesting discussion of the properties of multilateral federations).
+<a href="https://openid.net/specs/openid-connect-federation-1_0.html">OpenID Connect Federation</a>
+for an interesting discussion of the properties of multilateral federations).</p>
 
-Any entity that is asked to make a decision about sharing data needs to have *a priori*
-made the decision "which other entities do I trust?". In genomics, a single decision
+<p>Any entity that is asked to make a decision about sharing data needs to have <em>a priori</em>
+made the decision “which other entities do I trust?”. In genomics, a single decision
 to allow data sharing might involve simultaneous trusting of
-multiple entities - human genomics is complex!
+multiple entities - human genomics is complex!</p>
 
-When presented with a
+<p>When presented with a
 Passport and Visas from entities that they trust - they can rely on the information (claims) provided
 to make data sharing decisions. If presented with information from entities that are
 untrusted - the content of the message is irrelevant as there is no basis on which to believe
-the content.
+the content.</p>
 
-So we can see that trust is a crucial element of a working federation. How do we establish
-these trust relationships?
+<p>So we can see that trust is a crucial element of a working federation. How do we establish
+these trust relationships?</p>
 
-GA4GH Passports and Visas leverage the mechanisms
-present in [JWT](https://datatracker.ietf.org/doc/html/rfc7519) as used
-by the [OIDC standards](https://openid.net/specs/openid-connect-core-1_0.html) 
-to cryptographically "sign" tokens containing claims. Signed tokens can be
-"verified" using public/private keys.
+<p>GA4GH Passports and Visas leverage the mechanisms
+present in <a href="https://datatracker.ietf.org/doc/html/rfc7519">JWT</a> as used
+by the <a href="https://openid.net/specs/openid-connect-core-1_0.html">OIDC standards</a> 
+to cryptographically “sign” tokens containing claims. Signed tokens can be
+“verified” using public/private keys.</p>
 
+<h3 id="why-are-the-visa-claims-formatted-as-jwts-inside-the-passport">Why are the Visa claims formatted as JWTs inside the Passport?</h3>
 
-### Why are the Visa claims formatted as JWTs inside the Passport?
+<p>(last updated August 2022)</p>
 
-(last updated August 2022)
-
-If visas were not signed separately from a Passport, then Clearinghouses would require a high degree of confidence that
+<p>If visas were not signed separately from a Passport, then Clearinghouses would require a high degree of confidence that
 the signing Passport Issuer or Broker was accurately representing the contents of Visas from the original Visa Issuer;
 there would be no mechanisms to prevent a malicious or defective Passport Issuer from misrepresenting Visa contents.
 By signing Visas separately from Passports, we prevent intermediate parties from tampering with Visa contents,
-allowing Clearinghouses to safely rely on Visa contents based on their trust relationship with the Visa Issuer.
+allowing Clearinghouses to safely rely on Visa contents based on their trust relationship with the Visa Issuer.</p>
 
-### What are the ways that key management is done in practice?
+<h3 id="what-are-the-ways-that-key-management-is-done-in-practice">What are the ways that key management is done in practice?</h3>
 
-(last updated July 2022)
+<p>(last updated July 2022)</p>
 
-There are a variety of approaches that can be used for key
+<p>There are a variety of approaches that can be used for key
 management for Passports and Visas. We will first detail those that can be used for Passports
-and then discuss some extra wrinkles for Visas.
+and then discuss some extra wrinkles for Visas.</p>
 
-For this discussion we assume there is a concrete JWT from issuer `https://issuer.example.org`
-(possibly a Broker *or* a Visa Issuer).
+<p>For this discussion we assume there is a concrete JWT from issuer <code class="language-plaintext highlighter-rouge">https://issuer.example.org</code>
+(possibly a Broker <em>or</em> a Visa Issuer).</p>
 
-My clearinghouse service 'trusts' the above issuer to help make data
+<p>My clearinghouse service ‘trusts’ the above issuer to help make data
 access decisions - and that trust is stated probably through some sort of explicit
-configuration. For our example, let's imagine it has a hypothetical YAML configuration file
+configuration. For our example, let’s imagine it has a hypothetical YAML configuration file</p>
 
-```yaml
-trusted_brokers:
-  - https://issuer.example.org
-  - https://login.broker.com
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://issuer.example.org</span>
+  <span class="pi">-</span> <span class="s">https://login.broker.com</span>
 
-trusted_visa_issuers:
-  - https://dac.gov.world
-</code></pre>
+<span class="na">trusted_visa_issuers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://dac.gov.world</span>
+</code></pre></div></div>
 
 <p>The service now wants to verify a Passport or Visa
 JWT purporting to be from that issuer.</p>
