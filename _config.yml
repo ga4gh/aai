@@ -34,7 +34,6 @@ exclude:
   - jekyll-builder-local/
   - Makefile
   - uml/
-  - DSIP/
   - README.md
   - S*.png
   - S*.jpg

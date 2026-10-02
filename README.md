@@ -1,17 +1,17 @@
 # GA4GH Data Security Work Stream
 
-This is the repository for the source of any specifications/documentation
-of the Data Security Work Stream of the Global Alliance for Genomics and Health ([GA4GH](https://www.ga4gh.org/)).
+This is the repository for the source of any specifications/documentation of the Data
+Security Work Stream of the Global Alliance for Genomics and Health
+([GA4GH](https://www.ga4gh.org/)).
 
 ## Resources
 
-- [Data Security and Infrastructure Policy](DSIP/DSIP_v4.0.md)
 - [Authentication and Authorization Infrastructure](AAI/README.md)
-
 
 ## Rendering documentation
 
-The source is written in Markdown and processed via Jekyll. Diagrams make use of PlantUML.
+The source is written in Markdown and processed via Jekyll. Diagrams make use of
+PlantUML.
 
 To produce a local copy, clone the repository and run
 
@@ -19,11 +19,12 @@ To produce a local copy, clone the repository and run
 make
 ```
 
-or alternatively run the simple `docker` command shown in the Makefile (runs Jekyll in `serve` mode).
+or alternatively run the simple `docker` command shown in the Makefile (runs Jekyll in
+`serve` mode).
 
 The local copy can then be browsed at
 
-```
+```text
 http://localhost:4000/local/
 ```
 
@@ -31,7 +32,7 @@ http://localhost:4000/local/
 
 The following Liquid tags are used to separate
 
-Second level headers - {% hr2 %} 
+Second level headers - {% hr2 %}
 
 Third level headers - {% hr3 %}
 
