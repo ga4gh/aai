@@ -292,6 +292,109 @@ client <- clearing : Client is given data
 
 {% hr2 %}
 
+<hr style="width: 10em; margin: 2em auto;"/>   
+
+### What about passing through tokens when orchestrating workflows?
+
+Assume we have a researcher running a workflow using an orchestrator (WES) along with a TES worker calling a DRS service to access data stored in S3. 
+
+```mermaid
+graph LR
+
+    R["Researcher"]
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+
+    R --> WES
+    WES --> TES
+    TES --> DRS
+    DRS --> S3
+    TES --> S3
+    R["Researcher"]
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+```
+
+One way to do it: WES calls the Authorization Server to exchange the User Token for a token scoped to the TES and DRS services.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor R as Researcher 
+    participant WES as Orchestrator (WES)
+    participant AuthServer as AuthServer
+    participant TES as TES Worker
+    participant DRS as DRS
+    participant S3 as Storage (S3)
+
+    R->>AuthServer: Log In
+    AuthServer->>R: Return User Token
+
+    %% Step 1: Token Exchange
+    R->>WES: Submit job with User Token
+    WES->>AuthServer: POST /token (RFC 8693 Token Exchange)<br/>grant_type=token-exchange<br/>subject_token=UserToken<br/>audience=["TES", "DRS"]
+    AuthServer-->>WES: Return Exchanged Token B (aud=["TES", "DRS"])
+    WES->>TES: Dispatch job with Token B
+
+    %% Step 2: Request Pre-Signed URL using RFC 8693 Token
+    TES->>DRS: GET /objects/{object_id}/access/s3<br/>Authorization: Bearer Token B
+    DRS-->>TES: Return Pre-Signed S3 GET URL
+
+    %% Step 3: Fetch Data Directly from Storage
+    TES->>S3: HTTP GET via Pre-Signed URL
+    S3-->>TES: Stream Object Data
+```
+
+### What if you have an agent acting on behalf of the researcher?
+
+If we have an agent and MCP server acting on behalf of the researcher in the previous scenario:
+
+```mermaid
+graph LR
+
+    R["Researcher"]
+    Agent
+    MCP
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+
+    R --> Agent --> MCP --> WES
+    WES --> TES
+    TES --> DRS
+    DRS --> S3
+    TES --> S3
+```
+
+With an MCP server in front of WES, it would be much the same, but you'd get another token to the MCP server, or you'd have it running on a service account that impersonates the user. Either way, the agent harness would have to authenticate to the MCP with the help of the user. The MCP would pass its identity to WES and WES would work the same.
+
+```mermaid
+graph LR
+
+    R["Researcher"]
+    Agent
+    MCP
+    WES["WES\nOrchestrator"]
+    TES["TES\nWorker"]
+    DRS[DRS]
+    S3["Storage (S3)"]
+
+    R -- prompt --> Agent
+    R -- configure\nMCP client\nto authorize\nMCP --> MCP
+    Agent --> MCP
+    MCP --> WES
+    WES --> TES
+    TES --> DRS
+    DRS --> S3
+    TES --> S3
+```
+
+
 ## Trust
 
 ### What's with all the signed passports and visas etc? Why so complex?
@@ -535,5 +638,5 @@ in place in order to make this a secure method of authentication and that the Us
 is aware that they are exchanging information with another stack without
 explicit OIDC-style consent.
 
-![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
+![JWT-Only Flow between trusted stacks](./GA4GH_JWT-only_flow.png)
 {% endcomment %}

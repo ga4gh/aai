@@ -7,7 +7,7 @@ layout: home
 * [OIDC Profile]({% link AAI/AAIConnectProfile.md %})
 * [FAQ]({% link AAI/FAQ.md %})
 * [Implementations]({% link AAI/implementations.md %})
-* [Changes]({% link AAI/VERSIONS.md %})
+* [Version History]({% link AAI/VERSIONS.md %})
 
 
 GA4GH AAI and Passports provide secure, standards-based data access in cases where the data access committee / data steward is not tightly coupled with the data holder. 

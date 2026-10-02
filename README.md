@@ -23,9 +23,12 @@ or alternatively run the simple `docker` command shown in the Makefile (runs Jek
 
 The local copy can then be browsed at
 
-```
+```text
 http://localhost:4000/local/
 ```
+
+(Assuming default port 4000). To use a different port, run e.g. `make PORT=4001`
+and browse to `http://localhost:4001/local/` instead.
 
 ### Use of Jekyll
 
