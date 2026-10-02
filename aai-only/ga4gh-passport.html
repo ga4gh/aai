@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>GA4GH Passport | GA4GH Data Security</title>
+<meta name="generator" content="Jekyll v4.3.2">
+<meta property="og:title" content="GA4GH Passport">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="AAI">
+<meta property="og:description" content="AAI">
+<link rel="canonical" href="/aai-only/ga4gh-passport">
+<meta property="og:url" content="/aai-only/ga4gh-passport">
+<meta property="og:site_name" content="GA4GH Data Security">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="GA4GH Passport">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"AAI","headline":"GA4GH Passport","url":"/aai-only/ga4gh-passport"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/aai-only/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/aai-only/feed.xml" title="GA4GH Data Security">
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/aai-only/">GA4GH Data Security</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/aai-only/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/aai-only/ga4gh-passport">GA4GH Passport</a><a class="page-link" href="/aai-only/ga4gh-custom-visas">GA4GH Passport Custom Visa Registry</a><a class="page-link" href="/aai-only/aai-faq">AAI FAQ</a><a class="page-link" href="/aai-only/aai-implementations">AAI Implementations</a><a class="page-link" href="/aai-only/versions">Version History</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">GA4GH Passport</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="ga4gh-passport">GA4GH Passport</h1>
+
+<p><strong>Version</strong>: 1.2.1</p>
+
+<p><strong>Work Stream Name</strong>: Data Use and Researcher Identity (DURI)</p>
+
+<p><strong>Product Name</strong>: GA4GH Passport</p>
+
+<p><strong>Product Description:</strong> This document provides the GA4GH technical
+specification for a GA4GH <a href="#term-passport">Passport</a> to be
+consumed by <a href="#term-passport-clearinghouse">Passport Clearinghouses</a> in a
+standardized approach to determine whether or not data access should be
+granted. Additionally, the specification provides guidance on encoding
+specific <a href="#encoding-use-cases">use cases</a>, including
+<a href="#term-visa">Visas</a> for <a href="#registered-access">Registered Access</a> as
+described in the “<a href="https://www.nature.com/articles/s41431-018-0219-y">Registered access: authorizing data
+access</a>” publication.
+<strong>Refer to the <a href="#overview">Overview</a> for an introduction to how data
+objects and services defined in this specification fit together.</strong></p>
+
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
+
+<ul>
+  <li>toc</li>
+</ul>
+
+<h2 id="terminology">Terminology</h2>
+
+<h3 id="inherited-definitions">Inherited Definitions</h3>
+
+<p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
+“SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be
+interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a>.</p>
+
+<p>This specification inherits terminology from the
+<a href="aai-openid-connect-profile#terminology">GA4GH AAI OIDC Profile</a>
+specification, namely these terms:</p>
+
+<ul>
+  <li>
+<a name="term-passport"></a><strong><a href="aai-openid-connect-profile#term-passport">Passport</a></strong>
+</li>
+  <li>
+<a name="term-passport-scoped-access-token"></a><strong><a href="aai-openid-connect-profile#term-passport-scoped-access-token">Passport-Scoped Access Token</a></strong>
+</li>
+  <li>
+<a name="term-passport-clearinghouse"></a><strong><a href="aai-openid-connect-profile#term-passport-clearinghouse">Passport Clearinghouse</a></strong>
+</li>
+  <li>
+<a name="term-visa-assertion"></a><strong><a href="aai-openid-connect-profile#term-visa-assertion">Visa Assertion</a></strong>
+</li>
+  <li>
+<a name="term-visa-assertion-source"></a><strong><a href="aai-openid-connect-profile#term-visa-assertion-source">Visa Assertion Source</a></strong>
+</li>
+  <li>
+<a name="term-visa-issuer"></a><strong><a href="aai-openid-connect-profile#term-visa-issuer">Visa Issuer</a></strong>
+</li>
+  <li>
+<a name="term-visa"></a><strong><a href="aai-openid-connect-profile#term-visa">Visa</a></strong>
+</li>
+  <li>
+<a name="term-jwt"></a><strong><a href="aai-openid-connect-profile#term-jwt">JWT</a></strong>
+</li>
+  <li>
+<a name="term-ga4gh-claim"></a><strong><a href="aai-openid-connect-profile#term-ga4gh-claim">GA4GH Claim</a></strong>
+</li>
+  <li>
+<a name="term-broker"></a><strong><a href="aai-openid-connect-profile#term-broker">Broker</a></strong>
+</li>
+</ul>
+
+<h3 id="term-definitions">Term Definitions</h3>
+
+<h4 id="passport-claim">Passport Claim</h4>
+
+<ul>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> claim. It is a <a href="#term-ga4gh-claim">GA4GH Claim</a>
+with a claim value being a list of <a href="#term-visa">Visas</a>.</p>
+  </li>
+  <li>
+    <p>Visas from multiple <a href="#term-visa-issuer">Visa Issuers</a> can be bundled together in the
+same <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> claim.</p>
+  </li>
+  <li>
+    <p>For example, the following structure encodes a Passport Claim:</p>
+
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>"ga4gh_passport_v1" : [
+    &lt;Visa&gt;,
+    &lt;Visa (if more than one)&gt;,
+    ...
+]
+</code></pre></div>    </div>
+    <h4 id="visa-claim">Visa Claim</h4>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim. It is a <a href="#term-ga4gh-claim">GA4GH Claim</a>
+with a claim value being a <a href="#visa-object">Visa Object</a>.</p>
+  </li>
+  <li>
+    <p>For example, the following structure encodes a Visa Claim:</p>
+
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>"ga4gh_visa_v1" : {
+    "type": "&lt;visa-type&gt;",
+    "asserted": &lt;seconds-since-epoch&gt;,
+    "value": "&lt;value-string&gt;",
+    "source": "&lt;source-URL&gt;",
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="visa-identity">Visa Identity</h4>
+
+<ul>
+  <li>The {<code class="language-plaintext highlighter-rouge">sub</code>, <code class="language-plaintext highlighter-rouge">iss</code>} pair of JWT standard claims (<a href="https://tools.ietf.org/html/rfc7519#section-4.1.1">RFC7519 section
+4.1.1</a>) that are
+included within a <a href="#term-visa">Visa</a> that represents a
+given user (<code class="language-plaintext highlighter-rouge">sub</code> for subject) within the issuer’s (<code class="language-plaintext highlighter-rouge">iss</code>) system.</li>
+</ul>
+
+<h4 id="visa-object">Visa Object</h4>
+
+<ul>
+  <li>
+    <p>A claim value for
+  the <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim name. The claim value is a JSON object
+  that provides claims that describe <a href="#term-visa">Visa</a>’s
+  properties that cannot be described by the standard JWT claims like <code class="language-plaintext highlighter-rouge">sub</code> or <code class="language-plaintext highlighter-rouge">exp</code>.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim is required to define a GA4GH v1 visa and
+  contains controlled vocabulary as defined in this document. This object
+  is not the entire visa, and there are other important claims within
+  Visa JWTs that MAY be specific to its visa type as well as other
+  JWT claims that are required as per this specification and the GA4GH
+  AAI OIDC specification.</p>
+  </li>
+  <li>
+    <p>For claim definitions, refer to the <a href="#visa-object-claims">Visa Object Claims</a> section of this specification.</p>
+  </li>
+</ul>
+
+<h4 id="visa-type">Visa Type</h4>
+
+<ul>
+  <li>
+    <p>The “<a href="#type">type</a>” claim value of a <a href="#visa-object">Visa Object</a>
+that represents the semantics of the assertion and informs all parties
+involved in the authoring or handling the assertion how to interpret
+other <a href="#visa-object-claims">Visa Object Claims</a>.</p>
+  </li>
+  <li>
+    <p>For example, a Visa Type of “AffiliationAndRole” per the
+<a href="#ga4gh-standard-visa-type-definitions">Standard Visa Type Definitions</a>
+specifies the semantics of the Visa as well as the
+expected encoding of the “<a href="#value">value</a>” claim value for this purpose.</p>
+  </li>
+  <li>
+    <p>In addition to Standard Visa Type Definitions, there
+MAY also be Visas with <a href="#custom-visa-types">Custom Visa Types</a>.</p>
+  </li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>Please see the <a href="aai-openid-connect-profile#flow-of-assertions">Flow of Assertions</a>
+section in the GA4GH AAI OIDC Profile specification for an overview of interaction among the specified parties.</p>
+
+<h3 id="general-requirements">General Requirements</h3>
+
+<ol>
+  <li>
+    <p>Each Visa may have a different expiry.</p>
+  </li>
+  <li>
+    <p>Visas MUST have an indication of
+which organization made the <a href="#term-visa-assertion">Visa Assertion</a> (i.e. the
+“<a href="#source">source</a>” claim), but Visas do not generally indicate
+individual persons involved in making the assertion (i.e. who assigned/signed
+the assertion) as detailed identity information is not needed to make an
+access decision.</p>
+  </li>
+  <li>
+    <p>Additional information about identity
+that is not needed to make an access decision SHOULD not be included in the
+Visas. Identity description, encoding audit details, other data
+for non-access purposes are not the intent of these Visas,
+and must be handled via other means beyond the scope of this specification
+should they be needed for entities and systems with sufficient authority to
+process such information.</p>
+  </li>
+  <li>
+    <p>The <a href="#passport-claim">Passport Claim</a>
+MUST only be present in a response when <a href="#term-passport-scoped-access-token">Passport-Scoped Access Token</a> is provided.</p>
+  </li>
+  <li>
+    <p>If the <a href="#term-broker">Broker</a> is the <a href="#term-visa-issuer">Visa Issuer</a>,
+it MUST set the <code class="language-plaintext highlighter-rouge">iss</code> to itself and sign such Visas with an
+appropriate private key as described in the GA4GH AAI OIDC specification.</p>
+  </li>
+  <li>
+    <p>Visas are designed for machine
+interpretation only in order to make an access decision and is a non-goal to
+support rich user interface requirements nor do these claims fully encode the
+audit trail.</p>
+  </li>
+  <li>
+    <p>A <a href="#visa-object">Visa Object</a> MAY
+contain the “<a href="#conditions">conditions</a>” claim to restrict the Visa
+to only be valid when the conditions are met.</p>
+
+    <ul>
+      <li>For example, an identity can have several affiliations and a
+Visa with type “ControlledAccessGrants” MAY establish a
+dependency on one of them being present in the Passport by using the
+<code class="language-plaintext highlighter-rouge">conditions</code> claim.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Processing a Passport within a Passport Clearinghouse MUST abide by the following:</p>
+
+    <ol>
+      <li>
+        <p>Passport Clearinghouses MUST reject all requests that include Passports
+that fail the necessary checks as described in the GA4GH AAI OIDC specification.</p>
+      </li>
+      <li>
+        <p>A Passport Clearinghouse MUST ignore all Visas it does not
+need to process a particular request.</p>
+      </li>
+      <li>
+        <p>Passport Clearinghouses MUST ignore Passports and Visas
+unless:</p>
+
+        <ol>
+          <li>
+            <p>The Passport Clearinghouse has sufficient trust relationships
+with all of: the <a href="#term-broker">Broker</a>, <a href="#term-visa-assertion-source">Visa Assertion Source</a>,
+<a href="#term-visa-issuer">Visa Issuer</a>; or</p>
+          </li>
+          <li>
+            <p>The Passport Clearinghouse can rely on a trusted service that
+provides sufficient trust of any of the Broker,
+Visa Assertion Source and/or Visa Issuer
+such that the Passport Clearinghouse can establish trust of all
+three such parties.</p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <p>When combining Visas with multiple <a href="#visa-identity">Visa Identities</a> for the purposes of evaluating
+authorization, a Passport Clearinghouse MUST check the
+<a href="#linkedidentities">LinkedIdentities</a> Visas by trusted issuers
+and ensure that trusted sources have asserted that these
+Visa Identities represent the same end user.</p>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="support-for-user-interfaces">Support for User Interfaces</h3>
+
+<p>(e.g. mapping a URI string to a human-readable description for a user
+interface.)</p>
+
+<p>For example, a user interface mapping of
+“<a href="https://doi.org/10.1038/s41431-018-0219-y">https://doi.org/10.1038/s41431-018-0219-y</a>” to a human readable description
+such as “this person is a bona fide researcher as described by the ‘Registered
+access: authorizing data access’ publication”.</p>
+
+<p>It is a non-goal for this specification to consider the processes and data for
+the purpose of supporting user interfaces.</p>
+
+<h2 id="passport-claim-format">Passport Claim Format</h2>
+
+<p>The <a href="#passport-claim">Passport Claim</a> name maps to an array of <a href="#term-visa">Visas</a>.</p>
+
+<p>Non-normative example of a set of Visas, encoded as JWS Compact Serialization strings:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "ga4gh_passport_v1": [
+    "&lt;eyJhbGciOiJI...aaa&gt;",
+    "&lt;eyJhbGciOiJI...bbb&gt;"
+  ]
+}
+</code></pre></div></div>
+
+<p>For a more reader-friendly example, see the <a href="#example-passport-claim">Example Passport
+Claim</a> section of the specification.</p>
+
+<h3 id="visa-requirements">Visa Requirements</h3>
+
+<ul>
+  <li>
+    <p>Visas MUST conform to one of the
+<a href="aai-openid-connect-profile#visa-issued-by-visa-issuer">GA4GH AAI Specification Visa formats</a>
+as JWS Compact Serialization strings as defined by <a href="https://tools.ietf.org/html/rfc7515#section-7.1">RFC7515 section
+7.1</a>.</p>
+  </li>
+  <li>
+    <p>Visa Issuers, Brokers, and Passport Clearinghouses
+MUST conform to the
+<a href="aai-openid-connect-profile">GA4GH AAI Specification</a>
+requirements for Visas in their use of Visas.</p>
+  </li>
+  <li>
+    <p>Validation, as outlined elsewhere in this specification and the
+GA4GH AAI Specification, MUST be performed before Visas are
+used for identity or authorization.</p>
+  </li>
+</ul>
+
+<h2 id="visa-format">Visa Format</h2>
+
+<p>Visas are signed JWTs encoded into strings using JWS Compact Serialization.
+When decoded, their structure is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  ["typ": "vnd.ga4gh.visa+jwt | at+jwt | JWT",]
+  "alg": "&lt;signing-algorithm&gt;",
+  ["jku": "&lt;json-web-keys-set-URL&gt;",]
+  "kid": "&lt;signing-key-identifier&gt;"
+}.
+{
+  "iss": "&lt;issuer-URL&gt;",
+  "sub": "&lt;subject-identifier&gt;",
+  ["scope": "openid ...",]
+  "jti": "&lt;token-identifier&gt;",
+  "iat": &lt;seconds-since-epoch&gt;,
+  "exp": &lt;seconds-since-epoch&gt;,
+  "ga4gh_visa_v1": {
+    "type": "&lt;visa-type&gt;",
+    "asserted": &lt;seconds-since-epoch&gt;,
+    "value": "&lt;value-string&gt;",
+    "source": "&lt;source-URL&gt;",
+    ["conditions": [...],]
+    ["by": "&lt;by-identifier&gt;"]
+  }
+}.&lt;signature&gt;
+</code></pre></div></div>
+<p>The standard JWT payload claims <code class="language-plaintext highlighter-rouge">iss</code>, <code class="language-plaintext highlighter-rouge">sub</code>, <code class="language-plaintext highlighter-rouge">iat</code>, <code class="language-plaintext highlighter-rouge">exp</code> are all REQUIRED.</p>
+
+<p>One of <code class="language-plaintext highlighter-rouge">scope</code> or <code class="language-plaintext highlighter-rouge">jku</code> MUST be present as described in
+<a href="aai-openid-connect-profile#conformance-for-visa-issuers">Conformance for Visa Issuers</a>
+within the AAI specification.</p>
+
+<p>Claims within the <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> <a href="#visa-object">Visa Object</a> are as described
+in the <a href="#visa-object-claims">Visa Object Claims</a> section of this specification.</p>
+
+<h4 id="typ">“<strong>typ</strong>”</h4>
+
+<ul>
+  <li>OPTIONAL. The value of the <code class="language-plaintext highlighter-rouge">typ</code> header claim is RECOMMENDED to be <code class="language-plaintext highlighter-rouge">vnd.ga4gh.visa+jwt</code>
+for <a href="aai-openid-connect-profile#visa-document-token-format">Visa Document Token Format</a>
+visas. The value <code class="language-plaintext highlighter-rouge">JWT</code> marking  general JWTs MAY also be used.</li>
+  <li>For <a href="aai-openid-connect-profile#visa-access-token-format">Visa Access Token Format</a>
+visas the value is unspecified, but it would likely be <code class="language-plaintext highlighter-rouge">at+jwt</code> as required by <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">section 2.1 of RFC 9068</a>
+for JWT access tokens.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">typ</code> header claim is specified by <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-5.1">section 5.1 of JWT RFC</a>
+to contain media type of the JWT for disambiguation.
+The full recommended media type for GA4GH Visas is <code class="language-plaintext highlighter-rouge">application/vnd.ga4gh.visa+jwt</code> where the subtype consist of
+the “vendor tree” prefix <code class="language-plaintext highlighter-rouge">vnd</code>, the “producer name” <code class="language-plaintext highlighter-rouge">ga4gh</code>, and the “product designation” <code class="language-plaintext highlighter-rouge">visa</code>
+followed by the <code class="language-plaintext highlighter-rouge">+jwt</code> structured syntax suffix (specified in <a href="https://datatracker.ietf.org/doc/html/rfc6838#section-3.2">section 3.2</a>
+and <a href="https://datatracker.ietf.org/doc/html/rfc6838#section-4.2.8">section 4.2.8  of RFC 6838</a>).
+Then <a href="https://www.rfc-editor.org/rfc/rfc7515.html#section-4.1.9">section 4.1.9 of JWS RFC</a> recommends to omit the prefix
+<code class="language-plaintext highlighter-rouge">application/</code> to keep messages compact.</li>
+</ul>
+
+<h4 id="alg">“<strong>alg</strong>”</h4>
+
+<ul>
+  <li>REQUIRED.The section <a href="aai-openid-connect-profile#signing-algorithms">Signing Algorithms</a>
+in the AAI specification lists possible algorithms used in the <code class="language-plaintext highlighter-rouge">alg</code> header claim.</li>
+</ul>
+
+<h4 id="exp">“<strong>exp</strong>”</h4>
+
+<ul>
+  <li>
+    <p>REQUIRED. Generally, it is seconds since unix epoch of when the
+<a href="#term-visa-assertion-source">Visa Assertion Source</a>
+requires such an assertion to be no longer valid. A Visa
+Assertion Source MAY choose to make an assertion very long lived.
+However, a <a href="#term-visa-issuer">Visa Issuer</a> MAY
+choose an earlier timestamp in order to limit the assertion’s duration
+within downstream Passport Clearinghouses.</p>
+  </li>
+  <li>
+    <p>Access is NOT necessarily removed by the <code class="language-plaintext highlighter-rouge">exp</code> timestamp. Instead,
+this timestamp may be viewed as a cut-off after which no new access
+will be granted and action to remove any existing access may
+commence anytime shortly after this cut-off period.</p>
+  </li>
+  <li>
+    <p>Its use by a Passport Clearinghouse is described in the
+<a href="#visa-expiry">Visa Expiry</a> section and
+<a href="#token-revocation">Token Revocation</a> section.</p>
+  </li>
+</ul>
+
+<h2 id="visa-object-claims">Visa Object Claims</h2>
+
+<p>Although standard claims within a <a href="#visa-object">Visa Object</a>
+are defined in this section, other claims MAY exist within the object
+and should be ignored by any Passport Clearinghouse that is not familiar
+with the use of such claims. Claim names are reserved for definition by
+GA4GH (or a body it elects).</p>
+
+<h4 id="type">“<strong>type</strong>”</h4>
+
+<ul>
+  <li>REQUIRED. A <a href="#visa-type">Visa Type</a> string that is
+either a <a href="#ga4gh-standard-visa-type-definitions">Standard Visa Type</a> name, or a
+<a href="#custom-visa-types">Custom Visa Type</a> name.</li>
+</ul>
+
+<h4 id="asserted">“<strong>asserted</strong>”</h4>
+
+<ul>
+  <li>
+    <p>REQUIRED. Seconds since unix epoch that represents when the
+  <a href="#term-visa-assertion-source">Visa Assertion Source</a> made the claim.</p>
+  </li>
+  <li>
+    <p>Note that the standard <code class="language-plaintext highlighter-rouge">iat</code> JWT claim on the Visa reflects the timestamp
+  of when the Visa was minted whereas the <code class="language-plaintext highlighter-rouge">asserted</code> claim
+  reflects when the <a href="#term-visa-assertion-source">Visa Assertion Source</a> made the assertion.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">asserted</code> MAY be used by a Passport Clearinghouse as described in the
+  <a href="#visa-expiry">Visa Expiry</a> section.</p>
+  </li>
+  <li>
+    <p>If a Visa Assertion repository does not include enough
+  information to construct an <code class="language-plaintext highlighter-rouge">asserted</code> timestamp, a <a href="#term-visa-issuer">Visa Issuer</a> MAY use a recent timestamp (for
+  example, the current timestamp) if the Visa Assertion repository
+  is kept up to date such that the Visa Issuer can ensure that
+  the assertion is valid at or near the time of minting the Visa.
+  However, generally it is RECOMMENDED to have the
+  Visa Assertion repository provide more accurate <code class="language-plaintext highlighter-rouge">asserted</code> information.</p>
+  </li>
+</ul>
+
+<h4 id="value">“<strong>value</strong>”</h4>
+
+<ul>
+  <li>
+    <p>REQUIRED. A string that represents any of the scope, process, identifier and
+  version of the assertion. The format of the string can vary by the
+  <a href="#visa-type">Visa Type</a>.</p>
+  </li>
+  <li>
+    <p>For example, <code class="language-plaintext highlighter-rouge">value: "https://doi.org/10.1038/s41431-018-0219-y"</code> when <code class="language-plaintext highlighter-rouge">type: "ResearcherStatus"</code>
+  represents a version of Registered Access Bona Fide
+  researcher status. Note that Registered Access requires more than one
+  <a href="#passport-visa">Visa</a> as outlined in the <a href="#registered-access">Registered
+  Access</a> section.</p>
+  </li>
+  <li>
+    <p>For the purposes of enforcing its policies for access, a Passport
+  Clearinghouse evaluating the <code class="language-plaintext highlighter-rouge">value</code> claim MUST:</p>
+
+    <ul>
+      <li>
+        <p>Validate URL strings as per the <a href="#url-claims">URL Claim</a>
+requirements if the Visa Type definition indicates the value
+is a URL (as indicated by the <code class="language-plaintext highlighter-rouge">type</code> claim).</p>
+      </li>
+      <li>
+        <p>Value strings MUST be full string case-sensitive matches
+unless the Visa Type defines a safe and reliable format for
+partitioning the value into substrings and matching on the various
+substrings. For example, the standard
+<a href="#affiliationandrole">AffiliationAndRole</a> Visa Type can be
+reliably partitioned by splitting the string at the first “@” sign if such
+exists, or otherwise producing an error (i.e. denying permission).</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="source">“<strong>source</strong>”</h4>
+
+<ul>
+  <li>
+    <p>REQUIRED. A <a href="#url-claims">URL Claim</a> that provides at a minimum the
+organization that made the assertion. If there is no organization
+making the assertion, the <code class="language-plaintext highlighter-rouge">source</code> claim value MUST be set to
+“https://no.organization”.</p>
+  </li>
+  <li>
+    <p>For complex organizations that may require more specific information
+regarding which part of the organization made the assertion, this claim MAY
+also encode some substructure to the organization that represents the
+origin of the authority of the assertion. When this approach is chosen, then:</p>
+
+    <ul>
+      <li>
+        <p>The additional substructure MUST only encode the sub-organization or
+department but no other details or variables that would make it
+difficult to enumerate the full set of possible values or cause Passport
+Clearinghouses confusion about which URLs to whitelist.</p>
+      </li>
+      <li>
+        <p>The additional information SHOULD be encoded into the subdomain or path
+whenever possible and SHOULD generally avoid the use of query parameters
+or anchors to represent the sub-organization.</p>
+      </li>
+      <li>
+        <p>Some organizations MAY wish to attribute the <code class="language-plaintext highlighter-rouge">source</code> to a particular
+Data Access Committee (DAC), especially for
+<a href="#controlledaccessgrants">ControlledAccessGrants</a> Visa Types.
+For example:</p>
+
+        <p><code class="language-plaintext highlighter-rouge">source: "https://www.ebi.ac.uk/ega/dacs/EGAC00000000001"</code></p>
+
+        <p>could represent one particular logical “DAC” organization as referred
+to by the EBI organization, and could be maintained by the EBI as a
+permanent identifier for this DAC.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="conditions">“<strong>conditions</strong>”</h4>
+
+<ul>
+  <li>
+    <p>OPTIONAL. A set of conditions on a
+<a href="#visa-object">Visa Object</a> indicates that the Visa is
+only valid if the clauses of the conditions match other Visas
+elsewhere in the <a href="#term-passport">Passport</a> and such content is both valid
+(e.g. hasn’t expired; signature of Visa has been verified against
+the public key; etc.) and if such content is accepted by the Passport
+Clearinghouse (e.g. the issuer is trusted; the <code class="language-plaintext highlighter-rouge">source</code> claim meets any
+policy criteria that has been established, etc.).</p>
+  </li>
+  <li>
+    <p>A Passport Clearinghouse MUST always check for the presence of
+the <code class="language-plaintext highlighter-rouge">conditions</code> claim and if present it MUST only accept the
+Visa if it can confirm that the conditions have been met.</p>
+  </li>
+  <li>
+    <p>Although it is RECOMMENDED to always implement full condition checking
+capabilities as described in this section, if a Passport Clearinghouse will be
+deployed for a more limited purpose where it is not expected to ever receive
+Visas with conditions, then such a Passport Clearinghouse MAY choose to
+not implement full condition checking. However, even in this case it MUST
+still check for the presence of the <code class="language-plaintext highlighter-rouge">conditions</code> claim on Visa
+Objects and reject (ignore) any Visas that contain a non-empty
+<code class="language-plaintext highlighter-rouge">conditions</code> claim value. Likewise if not all condition matching algorithms
+are implemented, it MUST reject any Visas that contain patterns
+that are not supported.</p>
+  </li>
+  <li>
+    <p>Format:</p>
+
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>"conditions": [
+  [
+    { // Condition clause 1
+      "type": "&lt;visa-type&gt;",
+      "&lt;visa-object-claim-name-1&gt;": "&lt;match-type&gt;:&lt;match-value&gt;",
+      "&lt;visa-object-claim-name-2&gt;": "&lt;match-type&gt;:&lt;match-value&gt;",
+      ...
+    }, // AND
+    { // Condition clause 2
+      ...
+    }
+  ], // OR
+  [
+    { // Condition clause 3
+      "type": "&lt;visa-type&gt;",
+      "&lt;visa-object-claim-name&gt;": "&lt;match-type&gt;:&lt;match-value&gt;",
+      ...
+    }
+  ],
+  ...
+]
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">conditions</code> value is a two-nested-lists structure in Disjunctive
+Normal Form:</p>
+
+    <ul>
+      <li>
+        <p>The outer level list is a set of OR clauses</p>
+      </li>
+      <li>
+        <p>The inner level list is a set of AND clauses that contain “Condition
+Clauses”</p>
+      </li>
+      <li>
+        <p>A Condition Clause MUST specify a “type” claim with a value as a
+Visa Type plus it MUST include at least one other claim with a
+name that matches a valid Visa Object claim name.</p>
+      </li>
+      <li>
+        <p>The values of Condition Clause claims MUST have a string prefix followed
+by a colon and then string suffix, except for <code class="language-plaintext highlighter-rouge">type</code> where it MUST be
+assumed to be “const” and is not specified.</p>
+
+        <ul>
+          <li>
+            <p>If prefix is “const”, then suffix MUST use case sensitive full string
+matching.</p>
+          </li>
+          <li>
+            <p>If prefix is “pattern”, then suffix MUST use full string <a href="#pattern-matching">Pattern
+Matching</a> to match input.</p>
+          </li>
+          <li>
+            <p>If prefix is “split_pattern”, then the full suffix MUST use full
+string <a href="#pattern-matching">Pattern Matching</a> on each full
+substring from splitting the corresponding Visa Object
+claim value that is being compared by the “;” character. If any one
+full substring matches, then the Condition Clause claim has found a
+match. “split_pattern” SHOULD only be used on claims where the
+Visa Type has been specified in a format that makes splitting
+on this character to be reliable, such as URI-encoded substrings with
+semicolon separators (see <a href="#linkedidentities">LinkedIdentities</a> as an
+example).</p>
+
+            <ul>
+              <li>For example: a Condition Clause claim value of
+“split_pattern:123,https:%2F%2Fexample?.org” will match a
+Visa Object claim value of
+“001,https::%2F%2Fexample1.org;123,https::%2F%2Fexample2.org;456,https::%2F%2Fexample3.org”
+because this comparison value will be split into:
+                <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>[
+  "001,https::%2F%2Fexample1.org",
+  "123,https::%2F%2Fexample2.org",
+  "456,https::%2F%2Fexample3.org"
+]
+</code></pre></div>                </div>
+                <p>and the second entry in that list is a match using the Pattern
+Matching definition with <code class="language-plaintext highlighter-rouge">123,https:%2F%2Fexample?.org</code> as the
+pattern to use.</p>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <p>If prefix is unknown or unsupported, then the Condition Clause must
+fail to match.</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Condition Clause claims are restricted to only <a href="#visa-object-claims">Visa Object Claims</a>
+(e.g. <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">source</code>, etc.) with string value
+definitions.</p>
+
+    <ul>
+      <li>
+        <p>It MUST NOT include <code class="language-plaintext highlighter-rouge">conditions</code> (i.e. a condition cannot be placed on
+another condition)</p>
+      </li>
+      <li>
+        <p>It MUST NOT contain a timestamp claim such as <code class="language-plaintext highlighter-rouge">asserted</code>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>The Passport Clearinghouse MUST verify that for each Condition Clause
+present, there exists a valid single corresponding
+<a href="#visa-object">Visa Object</a> such that:</p>
+
+    <ul>
+      <li>
+        <p>Checking the correctness of the Condition Clause MUST be performed first.
+For example, a <code class="language-plaintext highlighter-rouge">type</code> claim MUST be present.</p>
+      </li>
+      <li>
+        <p>Ignore Visa Objects that have the <code class="language-plaintext highlighter-rouge">conditions</code> claim present.
+This will avoid deep nesting of condition evaluation (i.e. avoid condition
+loops, stack overflows, etc).</p>
+      </li>
+      <li>
+        <p>A Condition Clause claim matches when the <code class="language-plaintext highlighter-rouge">&lt;match-type&gt;</code> algorithm
+matches a corresponding Visa Object’s claim in the Passport.</p>
+      </li>
+      <li>
+        <p><a href="#visa-object-claims">Visa Object Claims</a> that are not specified
+in the Condition Clause are not required to match (i.e. any value will be
+accepted within that claim, including if the claim is not present in the
+Visa Object).</p>
+      </li>
+      <li>
+        <p>All Condition Clause claims that are specified within one Condition
+Clause MUST match the same Visa Object in the Passport.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Non-normative example:</p>
+
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>"conditions": [
+  [
+    {
+      "type": "AffiliationAndRole",
+      "value": "const:faculty@uni-heidelberg.de",
+      "by": "const:so"
+    }, // AND
+    {
+      "type": "ResearcherStatus",
+      "value": "const:https://doi.org/10.1038/s41431-018-0219-y",
+    }
+  ], // OR
+  [
+    {
+      "type": "AffiliationAndRole",
+      "value": "pattern:faculty@*",
+      "source": "const:https://visas.elixir.org"
+      "by": "const:system"
+    }
+  ]
+]
+</code></pre></div>    </div>
+
+    <p>Would match a corresponding AffiliationAndRole assertion within the same
+Visa Object that has <strong>any</strong> of the following:</p>
+
+    <ul>
+      <li>
+        <p>On “Visa match 1”:</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">type</code> = “AffilationAndRole”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">value</code> = “faculty\@uni-heidelberg.de”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">by</code> = “so”</p>
+          </li>
+        </ul>
+
+        <p>AND on any other Visa as well as checking “Visa match 1”:</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">type</code> = “ResearcherStatus”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">value</code> = “<a href="https://doi.org/10.1038/s41431-018-0219-y">https://doi.org/10.1038/s41431-018-0219-y</a>”</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>OR, alternative acceptance is matching just one Visa:</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">type</code> = “AffilationAndRole”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">value</code> starts with “faculty\@”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">source</code> = “https://visas.elixir.org”; AND</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">by</code> = “system”</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="pattern-matching">Pattern Matching</h5>
+
+<ul>
+  <li>
+    <p>Pattern Matching is only for use as specified by
+“<a href="#conditions">conditions</a>”.</p>
+  </li>
+  <li>
+    <p>MUST Use full string case-sensitive character pattern comparison.</p>
+  </li>
+  <li>
+    <p>MUST support special meaning characters as the specification of patterns:</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">?</code> : A <code class="language-plaintext highlighter-rouge">&lt;question-mark&gt;</code> is a pattern that SHALL match any single
+character.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">*</code> : An <code class="language-plaintext highlighter-rouge">&lt;asterisk&gt;</code> is a pattern that SHALL match multiple characters:</p>
+
+        <ul>
+          <li>
+            <p>Match any string, including the empty string and null string.</p>
+          </li>
+          <li>
+            <p>Match the greatest possible number of characters that still allows
+the remainder of the pattern to match the string.</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>There is no escape character for special characters such as patterns.
+<code class="language-plaintext highlighter-rouge">?</code> is always treated as the <code class="language-plaintext highlighter-rouge">&lt;question-mark&gt;</code> pattern and <code class="language-plaintext highlighter-rouge">*</code> is always
+treated as the <code class="language-plaintext highlighter-rouge">&lt;asterisk&gt;</code> pattern.</p>
+  </li>
+  <li>
+    <p>A method evaluating a pattern on a string of input SHALL return a true if
+the input has found one or more possible ways to match or false if it does
+not.</p>
+  </li>
+</ul>
+
+<h4 id="by">“<strong>by</strong>”</h4>
+
+<ul>
+  <li>
+    <p>OPTIONAL. The level or type of authority within the “source” organization
+of the assertion.</p>
+  </li>
+  <li>
+    <p>A Passport Clearinghouse MAY use this claim as part of an authorization
+decision based on the policies that it enforces.</p>
+  </li>
+  <li>
+    <p>Fixed vocabulary values for this claim are:</p>
+
+    <ul>
+      <li>
+        <p><strong>self</strong>: The Visa Identity for which the assertion is being made
+and the person who made the assertion is the same person.</p>
+      </li>
+      <li>
+        <p><strong>peer</strong>: A person at the <code class="language-plaintext highlighter-rouge">source</code> organization has made this assertion on
+behalf of the Visa Identity’s person, and the person who is making
+the assertion has the same Visa Type and <code class="language-plaintext highlighter-rouge">value</code> in that <code class="language-plaintext highlighter-rouge">source</code>
+organization. The <code class="language-plaintext highlighter-rouge">source</code> claim represents the peer’s
+organization that is making the assertion, which is not necessarily
+the same organization as the Visa Identity’s organization.</p>
+      </li>
+      <li>
+        <p><strong>system</strong>: The <code class="language-plaintext highlighter-rouge">source</code> organization’s information system has made the
+assertion based on system data or metadata that it stores.</p>
+      </li>
+      <li>
+        <p><strong>so</strong>: The person (also known as “signing official”) making the assertion
+within the <code class="language-plaintext highlighter-rouge">source</code> organization possesses direct authority (as part of
+their formal duties) to bind the organization to their assertion that the
+Visa Identity did possess such authority at the time the
+assertion was made.</p>
+      </li>
+      <li>
+        <p><strong>dac</strong>: A Data Access Committee or other authority that is responsible
+as a grantee decision-maker for the given <code class="language-plaintext highlighter-rouge">value</code> and <code class="language-plaintext highlighter-rouge">source</code> claims
+pair.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>If this claim is not provided, then none of the above values can be assumed
+as the level or type of authority and the authority MUST be assumed to be
+“unknown”. Any policy expecting a specific value as per the list above MUST
+fail to accept an “unknown” value.</p>
+  </li>
+</ul>
+
+<h3 id="url-claims">URL Claims</h3>
+
+<p>A <a href="#visa-object-claims">Visa Object Claim</a> that is defined as being of URL
+format (see <a href="https://tools.ietf.org/html/rfc3986?#section-1.1.3">RFC3986 section
+1.1.3</a>) with the following
+limitations:</p>
+
+<ol>
+  <li>
+    <p>For the purposes of evaluating access, the URL MUST be treated as a simple
+unique persistent string identifier.</p>
+  </li>
+  <li>
+    <p>The URL is a canonical identifier and as such it is important that Passport
+Clearinghouses MUST match this identifier consistently using a
+case-sensitive full string comparison.</p>
+
+    <ul>
+      <li>
+        <p>If TLS is available on the resource, then its persistent identifier URL
+SHOULD use the “https” scheme even if the resource will also resolve using
+the “http” scheme.</p>
+      </li>
+      <li>
+        <p>When the URL is being used to represent an organization or a well defined
+child organization within a “<a href="#source">source</a>” claim, it is RECOMMENDED
+to use a URL as a persistent organizational ontology identifier, whether
+managed directly or by a third-party service such as
+<a href="https://grid.ac/institutes">GRID</a> when reasonable to do so.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>The URL SHOULD also be as short as reasonably possible while avoiding
+collisions, and MUST NOT exceed 255 characters.</p>
+  </li>
+  <li>
+    <p>The URL MUST NOT be fetched as part of policy evaluation when making an
+access decision. For policy evaluation, it is considered an opaque string.</p>
+  </li>
+  <li>
+    <p>URLs SHOULD resolve to a human readable document for a policy maker to
+reason about.</p>
+  </li>
+</ol>
+
+<h2 id="ga4gh-standard-visa-type-definitions">GA4GH Standard Visa Type Definitions</h2>
+
+<p>Note: in addition to these GA4GH standard Visa Types, there is also
+the ability to for a Visa Issuer to encode <a href="#custom-visa-types">Custom Visa Types</a>.</p>
+
+<h3 id="affiliationandrole">AffiliationAndRole</h3>
+
+<ul>
+  <li>
+    <p>The <a href="#visa-identity">Visa Identity</a>’s role within the identity’s affiliated institution
+as specified by one of the following:</p>
+
+    <ul>
+      <li>
+        <p><a href="http://software.internet2.edu/eduperson/internet2-mace-dir-eduperson-201602.html#eduPersonScopedAffiliation">eduPersonScopedAffiliation</a>
+attributed value of: faculty, student, or member. <br>
+This term is defined by eduPerson by the affiliated organization
+(organization after the \@-sign).</p>
+
+        <ul>
+          <li>
+            <p>Example: “faculty\@cam.ac.uk”</p>
+          </li>
+          <li>
+            <p>Note: based on the eduPerson specification, it is possible that
+institutions use a different definition for the meaning of “faculty”
+ranging from “someone who does research”, to “someone who teaches”,
+to “someone in education that works with students”.</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>A custom role that includes a <code class="language-plaintext highlighter-rouge">namespace</code> prefix followed by a dot (“.”)
+where implementers introducing a new custom role MUST coordinate
+with GA4GH (or a body it elects) to align custom role use cases in order
+to maximize interoperability and avoid fragmentation across
+implementations.</p>
+
+        <ul>
+          <li>
+            <p>Non-normative example: “ega.researcher\@med.stanford.edu” where “ega”
+is the namespace and “researcher” is the custom role within that
+namespace.</p>
+          </li>
+          <li>
+            <p>Custom roles and their prefixes MUST be limited to characters: a-z,
+dash (“-“), underscore (“_”), digits (0-9). Custom roles and prefixes
+MUST start with characters a-z.</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>If there is no affiliated institution associated with a given assertion, the
+affiliation portion of AffliationAndRole MUST be set to “no.organization”.</p>
+
+    <ul>
+      <li>Example: “public.citizen-scientist\@no.organization”</li>
+    </ul>
+  </li>
+  <li>
+    <p>AffiliationAndRole can be safely partitioned into a {role, affiliation} pair
+by splitting the value string at the first “@” sign.</p>
+  </li>
+</ul>
+
+<h3 id="acceptedtermsandpolicies">AcceptedTermsAndPolicies</h3>
+
+<ul>
+  <li>
+    <p>The <a href="#visa-identity">Visa Identity</a> or the
+  “<a href="#source">source</a>” organization has acknowledged the specific terms,
+  policies, and conditions (or meet particular criteria) as indicated by the
+  <code class="language-plaintext highlighter-rouge">value</code> claim.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">value</code> claim value conforms to <a href="#url-claims">URL Claim</a> format.</p>
+  </li>
+  <li>
+    <p>The URL SHOULD resolve to a public-facing, human readable web page that
+  describe the terms and policies.</p>
+  </li>
+  <li>
+    <p>Example <code class="language-plaintext highlighter-rouge">value: "https://doi.org/10.1038/s41431-018-0219-y"</code>
+  acknowledges ethics compliance for a particular version of <a href="#registered-access">Registered
+  Access</a>. Note that more
+  <a href="#term-visa">Visas</a> are needed to meet the requirements for Registered
+  Access status.</p>
+  </li>
+  <li>
+    <p>MUST include the “<a href="#by">by</a>” claim.</p>
+  </li>
+</ul>
+
+<h3 id="researcherstatus">ResearcherStatus</h3>
+
+<ul>
+  <li>
+    <p>The person has been acknowledged to be a researcher of a particular type or
+standard.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">value</code> claim conforms to <a href="#url-claims">URL Claim</a> format, and it
+indicates the minimum standard and/or type of researcher that describes
+the person represented by the given <a href="#visa-identity">Visa Identity</a>.</p>
+  </li>
+  <li>
+    <p>The URL SHOULD resolve to a human readable web page that describes the
+process that has been followed and the qualifications this person has met.</p>
+  </li>
+  <li>
+    <p>Example <code class="language-plaintext highlighter-rouge">value: "https://doi.org/10.1038/s41431-018-0219-y"</code>
+acknowledges a particular version of the registration process as needed
+for <a href="#registered-access">Registered Access</a> Bona Fide researcher
+status. Note that more <a href="#term-visa">Visas</a> are needed to meet
+the requirements for Registered Access status.</p>
+  </li>
+</ul>
+
+<h3 id="controlledaccessgrants">ControlledAccessGrants</h3>
+
+<ul>
+  <li>
+    <p>A dataset or other object for which controlled access has been granted to
+this <a href="#visa-identity">Visa Identity</a>.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">value</code> claim conforms to <a href="#url-claims">URL Claim</a> format.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">source</code> claim contains the access grantee organization.</p>
+  </li>
+  <li>
+    <p>MUST include the “<a href="#by">by</a>” claim.</p>
+  </li>
+</ul>
+
+<h3 id="linkedidentities">LinkedIdentities</h3>
+
+<ul>
+  <li>
+    <p>The identity as indicated by the {“sub”, “iss”} pair (aka
+<a href="#visa-identity">Visa Identity</a>) of the
+<a href="#term-visa">Visa</a> is the same as the identity or identities listed
+in the “<a href="#value">value</a>” claim.</p>
+  </li>
+  <li>
+    <p>The “<a href="#value">value</a>” claim format is a semicolon-delimited list of
+“&lt;uri-encoded-sub&gt;,&lt;uri-encoded-iss&gt;” entries with no added whitespace
+between entries.</p>
+
+    <ul>
+      <li>
+        <p>The “sub” and “iss” that are used to encode the “value” claim do
+not need to conform to <a href="#url-claims">URL Claim</a>
+requirements since they must match the corresponding Visa
+“sub” and “iss” claims that may be issued.</p>
+      </li>
+      <li>
+        <p>By URI encoding (<a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>) the
+“iss”, special characters (such as “,” and “;”) are encoded within the URL
+without causing parsing conflicts.</p>
+      </li>
+      <li>
+        <p>Example:
+“123456,https%3A%2F%2Fexample.org%2Fa%7Cb%2Cc;7890,https%3A%2F%2Fexample2.org”.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>The “<a href="#source">source</a>” claim refers to the <a href="#term-visa-assertion-source">Visa Assertion
+Source</a> that is making the assertion. This is
+typically the same organization as the <a href="#term-visa-issuer">Visa
+Issuer</a> (<code class="language-plaintext highlighter-rouge">iss</code>) that signs the Visa, but the
+<code class="language-plaintext highlighter-rouge">source</code> MAY also refer to another Visa Assertion Source depending
+on which organization collected the information.</p>
+  </li>
+  <li>
+    <p>As a non-normative example, if a policy needs 3 Visas and
+there are three Visas that meet the criteria on one Passport
+but they use 3 different <code class="language-plaintext highlighter-rouge">sub</code> values (“1234”, “567”, “890123”), then
+<strong>any</strong> of the following, if from a trusted issuers and sources, may
+allow these Visas to be combined (shown with JSON payload only
+and without the REQUIRED URI-encoding in order to improve readability of
+the example).</p>
+
+    <ol>
+      <li>
+        <p>One Visa that links 3 Visa Identities together.</p>
+
+        <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+  "iss": "https://example1.org/oidc",
+  "sub": "1234",
+  "ga4gh_visa_v1": {
+    "type": "LinkedIdentities",
+    "value": "567,https://example2.org/oidc;890123,https://example3.org/oidc",
+    "source": "https://example1.org/oidc"
+    ...
+  }
+}
+</code></pre></div>        </div>
+
+        <p>or</p>
+      </li>
+      <li>
+        <p>One Visa that links a superset of Visa
+Identities together.</p>
+
+        <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+  "iss": "https://example0.org/oidc",
+  "sub": "00001",
+  "ga4gh_visa_v1": {
+    "type": "LinkedIdentities",
+    "value":
+      "1234,http://example1.org/oidc;567,http://example2.org/oidc;890123,http://example3.org/oidc;sub4,http://example4.org/oidc"
+    "source": "https://example0.org/oidc"
+    ...
+  }
+}
+</code></pre></div>        </div>
+
+        <p>or</p>
+      </li>
+      <li>
+        <p>Multiple Visas that chain together a set or superset
+of Visa Identities.</p>
+
+        <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+  "iss": "https://example1.org/oidc",
+  "sub": "1234",
+  "ga4gh_visa_v1": {
+    "type": "LinkedIdentities",
+    "value": "567,https://example2.org/oidc",
+    "source": "https://example1.org/oidc"
+    ...
+  }
+},
+{
+  "iss": "https://example2.org/oidc",
+  "sub": "567",
+  "ga4gh_visa_v1": {
+    "type": "LinkedIdentities",
+    "value": "890123,https://example3.org/oidc",
+    "source": "https://example2.org/oidc"
+    ...
+  }
+}
+</code></pre></div>        </div>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="custom-visa-types">Custom Visa Types</h2>
+
+<ul>
+  <li>
+    <p>In addition to the
+<a href="#ga4gh-standard-visa-type-definitions">GA4GH Standard Visa Type Definitions</a>,
+Visas MAY be added using custom <code class="language-plaintext highlighter-rouge">type</code> names so long as the
+encoding of these Visas will abide by the requirements described
+elsewhere in this specification.</p>
+  </li>
+  <li>
+    <p>Custom Visa Types MUST limit personally identifiable information
+to only that which is necessary to provide authorization.</p>
+  </li>
+  <li>
+    <p>The custom <code class="language-plaintext highlighter-rouge">type</code> name MUST follow the format prescribed in the
+<a href="#url-claims">URL Claims</a> section of the specification.</p>
+  </li>
+  <li>
+    <p>Implementers introducing a new custom <code class="language-plaintext highlighter-rouge">type</code> name MUST coordinate with the
+GA4GH (or a body it elects) to align custom <code class="language-plaintext highlighter-rouge">type</code> use cases to maximize
+interoperability and avoid unnecessary fragmentation across implementations.</p>
+
+    <ul>
+      <li>
+        <p>To review the custom visa registry, including any visa descriptions,
+examples and links that have been provided through proposals using this
+process, visit the <a href="ga4gh_custom_visas.md">Custom Visa Type Registry</a>
+page.</p>
+      </li>
+      <li>
+        <p>Documentation on encoding and interpreting the claims SHOULD
+be provided as part of the proposal and for inclusion in a public custom
+visa type registry maintained by GA4GH. This documentation SHOULD also include
+examples and links to relevant documentation and/or open source software
+that MAY be available.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Passport Clearinghouses MUST ignore all Visas containing a custom
+<code class="language-plaintext highlighter-rouge">type</code> name that they do not support.</p>
+  </li>
+  <li>
+    <p>Non-normative example custom <code class="language-plaintext highlighter-rouge">type</code> name:<br>
+<code class="language-plaintext highlighter-rouge">type: "https://example.org/passportVisaTypes/researcherStudies"</code>.</p>
+  </li>
+</ul>
+
+<h2 id="encoding-use-cases">Encoding Use Cases</h2>
+
+<p>Use cases include, but are not limited to the following:</p>
+
+<h3 id="registered-access">Registered Access</h3>
+
+<ul>
+  <li>
+    <p>To meet the requirements of Registered Access to data as defined by
+publication <a href="https://doi.org/10.1038/s41431-018-0219-y">https://doi.org/10.1038/s41431-018-0219-y</a> as a specific
+version of Registered Access, a user needs to have <strong>all</strong> of the following
+Visas:</p>
+
+    <ol>
+      <li>
+        <p>Meeting the ethics requirements is represented by:</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">type: "AcceptedTermsAndPolicies"</code>; and</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">value: "https://doi.org/10.1038/s41431-018-0219-y"</code></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>Meeting the bona fide status is represented by:</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">type: "ResearcherStatus"</code>; and</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">value: "https://doi.org/10.1038/s41431-018-0219-y"</code></p>
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>If other versions of Registered Access are introduced, then the <code class="language-plaintext highlighter-rouge">value</code>
+claims for AcceptedTermsAndPolicies as well as ResearcherStatus MAY
+refer to the document or publication or sections thereof to act as the
+permanent identifiers for such versions of Registered Access.</p>
+  </li>
+  <li>
+    <p>The <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> (e.g. to
+authorize a registered access beacon) needs to evaluate the
+multiple Visas listed above to ensure their values match
+before granting access.</p>
+
+    <ul>
+      <li>If combining Visas from multiple
+<a href="#visa-identity">Visa Identities</a>, the Passport
+Clearinghouse MUST also check the
+<a href="#linkedidentities">LinkedIdentities</a> Visas and
+determine if combining these identities came from a trusted
+<a href="#term-visa-issuer">Visa Issuer</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="controlled-access">Controlled Access</h3>
+
+<ul>
+  <li>
+    <p>Controlled Access to data utilizes the following <a href="#visa-type">Visa Types</a>:</p>
+
+    <ul>
+      <li>
+        <p>MUST utilize one or more
+<a href="#controlledaccessgrants">ControlledAccessGrants</a> and/or custom
+controlled access visa type(s) for permissions associated with specific
+data or datasets. There MAY be more standard visa types introduced for
+encoding controlled access in future revisions of the Passport
+specification.</p>
+      </li>
+      <li>
+        <p>MAY utilize the <a href="#conditions">conditions</a> claim on
+“ControlledAccessGrants” to cause such a grant to require
+a Visa from a trusted Visa Assertion Source to
+assert that the identity has a role within a specific organization.
+This can be achieved by using the
+<a href="#affiliationandrole">AffiliationAndRole</a> Visa Type on
+the <code class="language-plaintext highlighter-rouge">conditions</code>.</p>
+      </li>
+      <li>
+        <p>MAY utilize any other valid Visa Type or <code class="language-plaintext highlighter-rouge">conditions</code> claim
+that may be required to meet controlled access policies.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="visa-expiry">Visa Expiry</h2>
+
+<p>In addition to any other policy restrictions that a Passport Clearinghouse
+may enforce, Passport Clearinghouses that provide access for a given
+duration provided by the user (excluding any revocation policies) MUST
+enforce one of the following algorithm options to ensure that Visa
+expiry is accounted for:</p>
+
+<p><strong>Option A</strong>: use the following algorithm to determine if the Visa
+is valid for the entire duration of the requested duration:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>now()+requestedTTL &lt; min(token.exp, token.ga4gh_visa_v1.asserted+maxAuthzTTL)
+</code></pre></div></div>
+
+<p>Where:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">requestedTTL</code> represents the duration for which access is being requested.
+Alternatively a solution may choose to have a stronger revocation policy
+instead of requiring such a duration.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">maxAuthzTTL</code> represents any additional expiry policy that the Passport
+Clearinghouse may choose to enforce. If this is not needed, it can
+effectively ignored by using a large number of years or otherwise have
+<code class="language-plaintext highlighter-rouge">token.ga4gh_visa_v1.asserted+maxAuthzTTL</code> removed and simplify the right
+hand side expression accordingly.</p>
+  </li>
+</ul>
+
+<p><strong>Option B</strong>: if tokens are sufficiently short lived and/or the authorization
+system has an advanced revocation scheme that does not need to specify a
+maxAuthzTTL as per Option A, then the check can be simplified:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>now()+accessTokenTTL &lt; token.exp
+</code></pre></div></div>
+
+<p>Where:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">accessTokenTTL</code> represents the duration for which an access token will be
+accepted and is bounded by the next refresh token cycle or <a href="aai-openid-connect-profile#at-polling">Access Token
+Polling</a>
+cycle or any larger propagation delay before access is revoked, which
+needs to be assessed based on the revocation model.</p>
+
+    <ul>
+      <li>For example, <code class="language-plaintext highlighter-rouge">accessTokenTTL</code> may be set to one hour, after which time
+more access tokens may be minted using a corresponding refresh token if
+it has not yet been revoked.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Expiry when using multiple Visas</strong>: if multiple Visas are
+required as part of an access policy evaluation, then the expiry to be used MUST
+be the minimum expiry timestamp, as calculated by the appropriate option above,
+across all Visas (<code class="language-plaintext highlighter-rouge">token</code> set) that were accepted as part of evaluating
+the access policy.</p>
+
+<h2 id="token-revocation">Token Revocation</h2>
+
+<p>As per the <a href="aai-openid-connect-profile#token-revocation">GA4GH AAI Specification on Token
+Revocation</a>,
+the following mechanisms are available within Visa:</p>
+
+<ol>
+  <li>
+    <p>Visa Objects have an “<a href="#asserted">asserted</a>” claim to allow
+downstream policies to limit the life, if needed, of how long assertions
+will be accepted for use with access and refresh tokens.</p>
+  </li>
+  <li>
+    <p>Visas have an “<a href="#exp">exp</a>” claim to allow Brokers and
+Passport Clearinghouses to limit the duration of access.</p>
+  </li>
+</ol>
+
+<p>At a minimum, these Visa Claims MUST be checked by all Passport
+Clearinghouses and systems MUST be in place to begin to take action to remove access
+by the expiry timestamp or shortly thereafter. Propagation of these permission
+changes may also require some reasonable delay.</p>
+
+<p>Systems employing Visas MUST provide mechanisms to
+limit the life of access, and specifically MUST conform to the GA4GH AAI
+Specification requirements in this regard. Systems utilizing Visas MAY also
+employ other mechanisms outlined in the GA4GH AAI Specification, such as <a href="aai-openid-connect-profile#at-polling">Access
+Token Polling</a>
+if the Visa is encoded as a <a href="aai-openid-connect-profile#term-visa-access-token-format">Visa Access Token</a>.</p>
+
+<h2 id="example-passport-claim">Example Passport Claim</h2>
+
+<p>This non-normative example illustrates a <a href="#passport-claim">Passport Claim</a>
+that has Visas representing Registered Access bona fide researcher
+status along with other Visas for access to specific Controlled Access
+data. The <a href="#visa-type">Visa Types</a> for this example are:</p>
+
+<ul>
+  <li>
+    <p><strong>AffiliationAndRole</strong>: The person is a member of faculty at Stanford
+University as asserted by a Signing Official at Stanford.</p>
+  </li>
+  <li>
+    <p><strong>ControlledAccessGrants</strong>: The person has approved access by the DAC at the
+Example Institute for datasets 710 and approval for dataset 432 for a dataset
+from EGA.</p>
+
+    <ul>
+      <li>
+        <p>In this example, assume dataset 710 does not have any
+“<a href="#conditions">conditions</a>” based on the
+AffiliationAndRole because the system that is asserting the assertion has an
+out of band process to check the researcher’s affiliation and role and
+withdraw the dataset 710 claim automatically, hence it does not need the
+<code class="language-plaintext highlighter-rouge">conditions</code> claim to accomplish this.</p>
+      </li>
+      <li>
+        <p>In this example, assume that dataset 432 does not use an out of band
+mechanism to check affiliation and role, so it makes use of the
+“<a href="#conditions">conditions</a>” claim mechanism to
+enforce the affiliation and role. The dataset 432 assertion is only valid if
+accompanied with a valid AffiliationAndRole claim for
+“faculty\@med.stanford.edu”.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>AcceptedTermsAndPolicies</strong>: The person has accepted the Ethics terms and
+conditions as defined by Registered Access. They took this action
+themselves.</p>
+  </li>
+  <li>
+    <p><strong>ResearcherStatus</strong>: A Signing Official at Stanford Medicine has asserted
+that this person is a bona fide researcher as defined by the <a href="#registered-access">Registered
+Access</a> model.</p>
+  </li>
+  <li>
+    <p><strong>LinkedIdentities</strong>: A Broker at example3.org has provided
+software functionality to allow a user to link their own accounts together.
+After the user has successfully logged into the two accounts and passed all
+auth challenges, the Broker added the
+<a href="#linkedidentities">LinkedIdentities</a> Visa for those two accounts:
+(1) “10001” from example1.org, and (2) “abcd” from example2.org.
+Since the Broker is signing the “LinkedIdentities”
+<a href="#term-visa">Visa</a>, it is acting as the <a href="#term-visa-issuer">Visa Issuer</a>.</p>
+  </li>
+</ul>
+
+<p>Normally a Passport like this would include <a href="#visa-format">Visa
+Format</a> entries as JWS Compact Serialization strings,
+however this example shows the result after the Visas have been
+unencoded into JSON (and reduced to include only the payload) to be more
+reader-friendly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"ga4gh_passport_v1": [
+    {
+        "iat": 1580000000,
+        "exp": 1581208000,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "AffiliationAndRole",
+            "asserted": 1549680000,
+            "value": "faculty@med.stanford.edu",
+            "source": "https://grid.ac/institutes/grid.240952.8",
+            "by": "so"
+        }
+    },
+    {
+        "iat": 1580000100,
+        "exp": 1581168872,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "ControlledAccessGrants",
+            "asserted": 1549632872,
+            "value": "https://example-institute.org/datasets/710",
+            "source": "https://grid.ac/institutes/grid.0000.0a",
+            "by": "dac"
+        }
+    },
+    {
+        "iat": 1580000200,
+        "exp": 1581168000,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "ControlledAccessGrants",
+            "asserted": 1549640000,
+            "value": "https://ega-archive.org/datasets/EGAD00000000432",
+            "source": "https://ega-archive.org/dacs/EGAC00001000205",
+            "by": "dac"
+            "conditions": [
+                [
+                    {
+                        "type": "AffiliationAndRole",
+                        "value": "const:faculty@med.stanford.edu",
+                        "source": "const:https://grid.ac/institutes/grid.240952.8",
+                        "by": "const:so"
+                    }
+                ],
+                [
+                    {
+                        "type": "AffiliationAndRole",
+                        "value": "const:faculty@med.stanford.edu",
+                        "source": "const:https://grid.ac/institutes/grid.240952.8",
+                        "by": "const:system"
+                    }
+                ]
+            ],
+        }
+    },
+    {
+        "iss": "https://issuer.example1.org/oidc",
+        "sub": "10001",
+        "iat": 1580000300,
+        "exp": 1581208000,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "AcceptedTermsAndPolicies",
+            "asserted": 1549680000,
+            "value": "https://doi.org/10.1038/s41431-018-0219-y",
+            "source": "https://grid.ac/institutes/grid.240952.8",
+            "by": "self"
+        }
+    },
+    {
+        "iss": "https://other.example2.org/oidc",
+        "sub": "abcd",
+        "iat": 1580000400,
+        "exp": 1581208000,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "ResearcherStatus",
+            "asserted": 1549680000,
+            "value": "https://doi.org/10.1038/s41431-018-0219-y",
+            "source": "https://grid.ac/institutes/grid.240952.8",
+            "by": "so"
+        }
+    },
+    {
+        "iss": "https://broker.example3.org/oidc",
+        "sub": "999999",
+        "iat": 1580000500,
+        "exp": 1581208000,
+        ...
+        "ga4gh_visa_v1": {
+            "type": "LinkedIdentities",
+            "asserted": 1549680000,
+            "value": "10001,https:%2F%2Fissuer.example1.org%2Foidc;abcd,https:%2F%2Fother.example2.org%2Foidc",
+            "source": "https://broker.example3.org/oidc",
+            "by": "system"
+        }
+    }
+]
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/aai-only/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">GA4GH Data Security</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">GA4GH Data Security</li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>AAI</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Changes Between Versions 1.0 and 1.2 | GA4GH Data Security</title>
+<meta name="generator" content="Jekyll v4.3.2">
+<meta property="og:title" content="Changes Between Versions 1.0 and 1.2">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="AAI">
+<meta property="og:description" content="AAI">
+<link rel="canonical" href="/aai-only/changes-1_2">
+<meta property="og:url" content="/aai-only/changes-1_2">
+<meta property="og:site_name" content="GA4GH Data Security">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="Changes Between Versions 1.0 and 1.2">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"AAI","headline":"Changes Between Versions 1.0 and 1.2","url":"/aai-only/changes-1_2"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/aai-only/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/aai-only/feed.xml" title="GA4GH Data Security">
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/aai-only/">GA4GH Data Security</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/aai-only/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/aai-only/ga4gh-passport">GA4GH Passport</a><a class="page-link" href="/aai-only/ga4gh-custom-visas">GA4GH Passport Custom Visa Registry</a><a class="page-link" href="/aai-only/aai-faq">AAI FAQ</a><a class="page-link" href="/aai-only/aai-implementations">AAI Implementations</a><a class="page-link" href="/aai-only/versions">Version History</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Changes Between Versions 1.0 and 1.2</h1>
+  </header>
+
+  <div class="post-content">
+    <p>This document lists changes between</p>
+<ul>
+  <li>GA4GH AAI OIDC Profile <a href="https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md">1.0.0</a> and <a href="aai-openid-connect-profile">1.2</a>
+</li>
+  <li>GA4GH Passport <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/v1.0.0/researcher_ids/ga4gh_passport_v1.md">1.0.0</a> and 1.2</li>
+</ul>
+
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
+
+<ul id="markdown-toc">
+  <li>
+<a href="#terminology-changes" id="markdown-toc-terminology-changes">Terminology changes</a>    <ul>
+      <li><a href="#changed-terms" id="markdown-toc-changed-terms">Changed terms</a></li>
+      <li><a href="#new-terms" id="markdown-toc-new-terms">New terms</a></li>
+    </ul>
+  </li>
+  <li><a href="#introduced-token-exchange-mechanism" id="markdown-toc-introduced-token-exchange-mechanism">Introduced Token Exchange mechanism</a></li>
+  <li><a href="#redefined-passport-as-a-jwt-containing-visas" id="markdown-toc-redefined-passport-as-a-jwt-containing-visas">Redefined Passport as a JWT containing Visas</a></li>
+  <li><a href="#defined-passport-issuer" id="markdown-toc-defined-passport-issuer">Defined Passport Issuer</a></li>
+  <li><a href="#added-more-signing-algorithms" id="markdown-toc-added-more-signing-algorithms">Added more signing algorithms</a></li>
+  <li><a href="#media-types-for-jwts" id="markdown-toc-media-types-for-jwts">Media types for JWTs</a></li>
+  <li>
+<a href="#proposed-deprecations" id="markdown-toc-proposed-deprecations">Proposed Deprecations</a>    <ul>
+      <li><a href="#visa-access-tokens-also-referred-to-as-embedded-access-tokens" id="markdown-toc-visa-access-tokens-also-referred-to-as-embedded-access-tokens">Visa Access Tokens (also referred to as Embedded Access Tokens)</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="terminology-changes">Terminology changes</h2>
+
+<ul>
+  <li>Removed double definitions of same concepts like “Claim Source” in AAI and “Passport Visa Assertion Source” in Passport.</li>
+  <li>Made distinction between claim as an abstract assertion and a JWT/OIDC claim as a pair of a string key and a JSON value.</li>
+  <li>Renamed “Data Owner” to “Data Controller” to be compatible with European GDPR</li>
+</ul>
+
+<h3 id="changed-terms">Changed terms</h3>
+
+<ul>
+  <li>
+<strong>Claim Management System</strong> removed, the term was not used</li>
+  <li>claim → <strong>Visa Assertion</strong>
+</li>
+  <li>
+<strong>Claim Repository</strong> → <strong>Visa Assertion Repository</strong>
+</li>
+  <li>
+<strong>Claim Source</strong> → <strong>Visa Assertion Source</strong>
+</li>
+  <li>
+<strong>Claim Clearinghouse</strong> → <strong>Passport Clearinghouse</strong>
+</li>
+  <li>
+<strong>Embedded Token</strong> → <strong>Visa</strong>
+</li>
+  <li>
+<strong>Embedded Token Issuer</strong> → <strong>Visa Issuer</strong>
+</li>
+  <li>
+<strong>Embedded Access Token</strong> → <strong>Visa Access Token</strong>
+</li>
+  <li>
+<strong>Embedded Document Token</strong> → <strong>Visa Document Token</strong>
+</li>
+  <li>
+<strong>Flow of Claims</strong> → <strong>Flow of Assertions</strong>
+</li>
+  <li>
+<strong>Passport Bearer Token</strong> → <strong>Passport-Scoped Access Token</strong>
+</li>
+  <li>
+<strong>Data Owner</strong> → <strong>Data Controller</strong>
+</li>
+</ul>
+
+<h3 id="new-terms">New terms</h3>
+
+<ul>
+  <li>
+<strong>Passport</strong> - A signed and verifiable JWT container for holding Visas.</li>
+  <li>
+<strong>Passport Issuer</strong> - a service that creates and signs Passports.</li>
+  <li>
+<strong>Token Endpoint</strong> – as defined by OIDC</li>
+  <li>
+<strong>UserInfo Endpoint</strong> - as defined by OIDC</li>
+</ul>
+
+<h2 id="introduced-token-exchange-mechanism">Introduced Token Exchange mechanism</h2>
+
+<p>The standardized mechanism for exchanging access tokens for other tokens defined in <a href="https://www.rfc-editor.org/info/rfc8693">RFC 8693 OAuth 2.0 Token Exchange</a>
+was added and used for releasing Passports.</p>
+
+<h2 id="redefined-passport-as-a-jwt-containing-visas">Redefined Passport as a JWT containing Visas</h2>
+
+<p>In version 1.0, Passport was defined as ”<em>GA4GH-compatible access token along with the Passport Claim that is returned from Passport Broker service endpoints using such an access token</em>“,
+thus as a tuple of an access token and a list of Visas that can be obtained from UserInfo endpoint using the access token.</p>
+
+<p>In version 1.2, Passport is defined as “<em>a signed and verifiable JWT container for holding Visas</em>“, thus as a token that can be passed among systems.</p>
+
+<p>For backward compatibility with version 1.0, list of Visas is still provided as a claim value from UserInfo endpoint.</p>
+
+<h2 id="defined-passport-issuer">Defined Passport Issuer</h2>
+
+<p>A <strong>Passport Issuer</strong> is a service that creates and signs Passports.
+A <strong>Broker</strong> is an OIDC Provider service that collects Visas from Visa Issuers and provides them to Passport Clearinghouses.</p>
+
+<p>Broker may optionally become a Passport Issuer by supporting Token Exchange for issuance of Passports.</p>
+
+<p>Brokers conforming to version 1.0 are still compatible with version 1.2, because Token Exchange support is optional.</p>
+
+<h2 id="added-more-signing-algorithms">Added more signing algorithms</h2>
+
+<p>The version 1.0 allowed only <strong>RS256</strong> algorithm for JWT signing.
+It is RSA-based algorithm using keys of size 2048 bits or larger and SHA-256 hash function.</p>
+
+<p>The AAI specification version 1.2 allows also the <strong>ES256</strong> algorithm which is
+ECDSA-based using P-256 elliptic curve and SHA-256 hash function.</p>
+
+<p>Elliptic Curve Cryptography allows much shorter keys and signatures than RSA.
+A short Elliptic Curve key of around 256 bits provides the same security as a 3072 bit RSA key.</p>
+
+<p>For a detailed discussion of signing algorithms, see the article
+<a href="https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use">JWTs: Which Signing Algorithm Should I Use?</a></p>
+
+<h2 id="media-types-for-jwts">Media types for JWTs</h2>
+
+<p>In version 1.0, all the mentioned JWTs (access tokens, visas) used in their <code class="language-plaintext highlighter-rouge">typ</code> (media type) header parameter
+the generic value <code class="language-plaintext highlighter-rouge">JWT</code> that marks a generic JWT.</p>
+
+<p>In version 1.2, the <code class="language-plaintext highlighter-rouge">typ</code> header parameter is used to distinguish the various types of JWTs:</p>
+
+<ul>
+  <li>access tokens conforming to <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">RFC9038</a>
+use the value <code class="language-plaintext highlighter-rouge">at+jwt</code>
+</li>
+  <li>Passports use the value <code class="language-plaintext highlighter-rouge">vnd.ga4gh.passport+jwt</code>
+</li>
+  <li>Visas are recommended to use the value <code class="language-plaintext highlighter-rouge">vnd.ga4gh.visa+jwt</code> but allowed to use <code class="language-plaintext highlighter-rouge">JWT</code>
+for backward compatibility with version 1.0</li>
+</ul>
+
+<h2 id="proposed-deprecations">Proposed Deprecations</h2>
+
+<h3 id="visa-access-tokens-also-referred-to-as-embedded-access-tokens">Visa Access Tokens (also referred to as Embedded Access Tokens)</h3>
+
+<p>It is proposed that the 1.x versions of this specification will be the last to support
+Visa Access Tokens. New implementations should issue Visas
+as Visa Document Tokens.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/aai-only/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">GA4GH Data Security</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">GA4GH Data Security</li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>AAI</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
