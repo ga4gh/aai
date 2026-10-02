@@ -35,7 +35,7 @@ facilitate access to data sets by addressing these challenges.*
 
 At a concrete level, data from human subjects has two axes of access control:
 
-![fig 1](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20background%20fig%201.JPG)
+![fig 1](aai%20background%20fig%201.JPG)
 
 1.  Authentication and Authorization Infrastructure (AAI) - These specify the
     collection of researchers that may access the dataset at any given time. For
@@ -183,7 +183,7 @@ contained the following 5 main categories
 
 5.  General Research Use.
 
-![fig 2](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20background%20fig%202.png)
+![fig 2](aai%20background%20fig%202.png)
 
 We propose that this effort be used as the starting point for developing a
 full-blown data use ontology that can be reduced to practice and used by data

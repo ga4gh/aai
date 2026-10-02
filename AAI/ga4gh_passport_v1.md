@@ -39,19 +39,19 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
 
 This specification inherits terminology from the
-[GA4GH AAI OIDC Profile](https://ga4gh.github.io/data-security/aai-openid-connect-profile#terminology)
+[GA4GH AAI OIDC Profile](aai-openid-connect-profile#terminology)
 specification, namely these terms:
 
-* <a name="term-passport"></a>**[Passport](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport)**
-* <a name="term-passport-scoped-access-token"></a>**[Passport-Scoped Access Token](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport-scoped-access-token)**
-* <a name="term-passport-clearinghouse"></a>**[Passport Clearinghouse](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport-clearinghouse)**
-* <a name="term-visa-assertion"></a>**[Visa Assertion](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-assertion)**
-* <a name="term-visa-assertion-source"></a>**[Visa Assertion Source](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-assertion-source)**
-* <a name="term-visa-issuer"></a>**[Visa Issuer](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-issuer)**
-* <a name="term-visa"></a>**[Visa](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa)**
-* <a name="term-jwt"></a>**[JWT](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-jwt)**
-* <a name="term-ga4gh-claim"></a>**[GA4GH Claim](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-ga4gh-claim)**
-* <a name="term-broker"></a>**[Broker](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-broker)**
+* <a name="term-passport"></a>**[Passport](aai-openid-connect-profile#term-passport)**
+* <a name="term-passport-scoped-access-token"></a>**[Passport-Scoped Access Token](aai-openid-connect-profile#term-passport-scoped-access-token)**
+* <a name="term-passport-clearinghouse"></a>**[Passport Clearinghouse](aai-openid-connect-profile#term-passport-clearinghouse)**
+* <a name="term-visa-assertion"></a>**[Visa Assertion](aai-openid-connect-profile#term-visa-assertion)**
+* <a name="term-visa-assertion-source"></a>**[Visa Assertion Source](aai-openid-connect-profile#term-visa-assertion-source)**
+* <a name="term-visa-issuer"></a>**[Visa Issuer](aai-openid-connect-profile#term-visa-issuer)**
+* <a name="term-visa"></a>**[Visa](aai-openid-connect-profile#term-visa)**
+* <a name="term-jwt"></a>**[JWT](aai-openid-connect-profile#term-jwt)**
+* <a name="term-ga4gh-claim"></a>**[GA4GH Claim](aai-openid-connect-profile#term-ga4gh-claim)**
+* <a name="term-broker"></a>**[Broker](aai-openid-connect-profile#term-broker)**
 
 ### Term Definitions
 
@@ -128,7 +128,7 @@ specification, namely these terms:
 
 ## Overview
 
-Please see the [Flow of Assertions](https://ga4gh.github.io/data-security/aai-openid-connect-profile#flow-of-assertions)
+Please see the [Flow of Assertions](aai-openid-connect-profile#flow-of-assertions)
 section in the GA4GH AAI OIDC Profile specification for an overview of interaction among the specified parties.
 
 
@@ -233,13 +233,13 @@ Claim](#example-passport-claim) section of the specification.
 ### Visa Requirements
 
 -   Visas MUST conform to one of the
-    [GA4GH AAI Specification Visa formats](https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-issued-by-visa-issuer)
+    [GA4GH AAI Specification Visa formats](aai-openid-connect-profile#visa-issued-by-visa-issuer)
     as JWS Compact Serialization strings as defined by [RFC7515 section
     7.1](https://tools.ietf.org/html/rfc7515#section-7.1).
 
 -   Visa Issuers, Brokers, and Passport Clearinghouses
     MUST conform to the
-    [GA4GH AAI Specification](https://ga4gh.github.io/data-security/aai-openid-connect-profile)
+    [GA4GH AAI Specification](aai-openid-connect-profile)
     requirements for Visas in their use of Visas.
 
 -   Validation, as outlined elsewhere in this specification and the
@@ -278,7 +278,7 @@ When decoded, their structure is:
 The standard JWT payload claims `iss`, `sub`, `iat`, `exp` are all REQUIRED.
 
 One of `scope` or `jku` MUST be present as described in
-[Conformance for Visa Issuers](https://ga4gh.github.io/data-security/aai-openid-connect-profile#conformance-for-visa-issuers)
+[Conformance for Visa Issuers](aai-openid-connect-profile#conformance-for-visa-issuers)
 within the AAI specification.
 
 Claims within the `ga4gh_visa_v1` [Visa Object](#visa-object) are as described
@@ -287,9 +287,9 @@ in the [Visa Object Claims](#visa-object-claims) section of this specification.
 #### "**typ**"
 
 - OPTIONAL. The value of the `typ` header claim is RECOMMENDED to be `vnd.ga4gh.visa+jwt`
-  for [Visa Document Token Format](https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-document-token-format)
+  for [Visa Document Token Format](aai-openid-connect-profile#visa-document-token-format)
   visas. The value `JWT` marking  general JWTs MAY also be used.
-- For [Visa Access Token Format](https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-access-token-format)
+- For [Visa Access Token Format](aai-openid-connect-profile#visa-access-token-format)
   visas the value is unspecified, but it would likely be `at+jwt` as required by [section 2.1 of RFC 9068](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1)
   for JWT access tokens.
 - The `typ` header claim is specified by [section 5.1 of JWT RFC](https://datatracker.ietf.org/doc/html/rfc7519#section-5.1)
@@ -303,7 +303,7 @@ in the [Visa Object Claims](#visa-object-claims) section of this specification.
 
 #### "**alg**"
 
-- REQUIRED.The section [Signing Algorithms](https://ga4gh.github.io/data-security/aai-openid-connect-profile#signing-algorithms)
+- REQUIRED.The section [Signing Algorithms](aai-openid-connect-profile#signing-algorithms)
 in the AAI specification lists possible algorithms used in the `alg` header claim.
 
 
@@ -1034,7 +1034,7 @@ Where:
 
 -   `accessTokenTTL` represents the duration for which an access token will be
     accepted and is bounded by the next refresh token cycle or [Access Token
-    Polling](https://ga4gh.github.io/data-security/aai-openid-connect-profile#at-polling)
+    Polling](aai-openid-connect-profile#at-polling)
     cycle or any larger propagation delay before access is revoked, which
     needs to be assessed based on the revocation model.
 
@@ -1051,7 +1051,7 @@ the access policy.
 ## Token Revocation
 
 As per the [GA4GH AAI Specification on Token
-Revocation](https://ga4gh.github.io/data-security/aai-openid-connect-profile#token-revocation),
+Revocation](aai-openid-connect-profile#token-revocation),
 the following mechanisms are available within Visa:
 
 1.  Visa Objects have an "[asserted](#asserted)" claim to allow
@@ -1070,8 +1070,8 @@ Systems employing Visas MUST provide mechanisms to
 limit the life of access, and specifically MUST conform to the GA4GH AAI
 Specification requirements in this regard. Systems utilizing Visas MAY also
 employ other mechanisms outlined in the GA4GH AAI Specification, such as [Access
-Token Polling](https://ga4gh.github.io/data-security/aai-openid-connect-profile#at-polling)
-if the Visa is encoded as a [Visa Access Token](https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-access-token-format).
+Token Polling](aai-openid-connect-profile#at-polling)
+if the Visa is encoded as a [Visa Access Token](aai-openid-connect-profile#term-visa-access-token-format).
 
 ## Example Passport Claim
 

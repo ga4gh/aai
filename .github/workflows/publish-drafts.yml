@@ -31,7 +31,7 @@ jobs:
       - name: Set Jekyll baseurl to Publish Folder
         uses: mikefarah/yq@master
         env:
-          PUBLISH_BASEURL: data-security/${{ steps.branch-name.outputs.current_branch }}
+          PUBLISH_BASEURL: ${{ github.repository.repo }}/${{ steps.branch-name.outputs.current_branch }}
         with:
           cmd: yq eval -i '.baseurl = strenv(PUBLISH_BASEURL)' '_config.yml'
 
