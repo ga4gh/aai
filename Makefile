@@ -1,5 +1,5 @@
 # safeish way of finding the folder that contains this Makefile
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ROOT_DIR:=$(shell dirname "$(realpath $(firstword $(MAKEFILE_LIST)))")
 
 # we use the builder variable here both as a folder path and docker image name.. split if needed
 BUILDER=jekyll-builder-local
