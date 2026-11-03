@@ -12,23 +12,23 @@
 <meta property="og:locale" content="en_US">
 <meta name="description" content="AAI">
 <meta property="og:description" content="AAI">
-<link rel="canonical" href="/data-security/ga4gh-passport">
-<meta property="og:url" content="/data-security/ga4gh-passport">
+<link rel="canonical" href="http://localhost:8444/local/aai/ga4gh-passport">
+<meta property="og:url" content="http://localhost:8444/local/aai/ga4gh-passport">
 <meta property="og:site_name" content="GA4GH Data Security">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta property="twitter:title" content="GA4GH Passport">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"AAI","headline":"GA4GH Passport","url":"/data-security/ga4gh-passport"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"AAI","headline":"GA4GH Passport","url":"http://localhost:8444/local/aai/ga4gh-passport"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/data-security/assets/main.css">
-<link type="application/atom+xml" rel="alternate" href="/data-security/feed.xml" title="GA4GH Data Security">
+<link rel="stylesheet" href="/aai/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="http://localhost:8444/local/aai/feed.xml" title="GA4GH Data Security">
 </head>
 <body>
 <header class="site-header" role="banner">
 
   <div class="wrapper">
-<a class="site-title" rel="author" href="/data-security/">GA4GH Data Security</a><nav class="site-nav">
+<a class="site-title" rel="author" href="/aai/">GA4GH Data Security</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger">
         <label for="nav-trigger">
           <span class="menu-icon">
@@ -39,7 +39,7 @@
         </label>
 
         <div class="trigger">
-<a class="page-link" href="/data-security/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/ga4gh-passport">GA4GH Passport</a><a class="page-link" href="/data-security/ga4gh-custom-visas">GA4GH Passport Custom Visa Registry</a><a class="page-link" href="/data-security/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/aai-implementations">AAI Implementations</a><a class="page-link" href="/data-security/versions">Version History</a>
+<a class="page-link" href="/aai/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/aai/ga4gh-passport">GA4GH Passport</a><a class="page-link" href="/aai/ga4gh-custom-visas">GA4GH Passport Custom Visa Registry</a><a class="page-link" href="/aai/aai-faq">AAI FAQ</a><a class="page-link" href="/aai/aai-implementations">AAI Implementations</a><a class="page-link" href="/aai/versions">Version History</a>
 </div>
       </nav>
 </div>
@@ -88,39 +88,39 @@ objects and services defined in this specification fit together.</strong></p>
 interpreted as described in <a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a>.</p>
 
 <p>This specification inherits terminology from the
-<a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#terminology">GA4GH AAI OIDC Profile</a>
+<a href="aai-openid-connect-profile#terminology">GA4GH AAI OIDC Profile</a>
 specification, namely these terms:</p>
 
 <ul>
   <li>
-<a name="term-passport"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport">Passport</a></strong>
+<a name="term-passport"></a><strong><a href="aai-openid-connect-profile#term-passport">Passport</a></strong>
 </li>
   <li>
-<a name="term-passport-scoped-access-token"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport-scoped-access-token">Passport-Scoped Access Token</a></strong>
+<a name="term-passport-scoped-access-token"></a><strong><a href="aai-openid-connect-profile#term-passport-scoped-access-token">Passport-Scoped Access Token</a></strong>
 </li>
   <li>
-<a name="term-passport-clearinghouse"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-passport-clearinghouse">Passport Clearinghouse</a></strong>
+<a name="term-passport-clearinghouse"></a><strong><a href="aai-openid-connect-profile#term-passport-clearinghouse">Passport Clearinghouse</a></strong>
 </li>
   <li>
-<a name="term-visa-assertion"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-assertion">Visa Assertion</a></strong>
+<a name="term-visa-assertion"></a><strong><a href="aai-openid-connect-profile#term-visa-assertion">Visa Assertion</a></strong>
 </li>
   <li>
-<a name="term-visa-assertion-source"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-assertion-source">Visa Assertion Source</a></strong>
+<a name="term-visa-assertion-source"></a><strong><a href="aai-openid-connect-profile#term-visa-assertion-source">Visa Assertion Source</a></strong>
 </li>
   <li>
-<a name="term-visa-issuer"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-issuer">Visa Issuer</a></strong>
+<a name="term-visa-issuer"></a><strong><a href="aai-openid-connect-profile#term-visa-issuer">Visa Issuer</a></strong>
 </li>
   <li>
-<a name="term-visa"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa">Visa</a></strong>
+<a name="term-visa"></a><strong><a href="aai-openid-connect-profile#term-visa">Visa</a></strong>
 </li>
   <li>
-<a name="term-jwt"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-jwt">JWT</a></strong>
+<a name="term-jwt"></a><strong><a href="aai-openid-connect-profile#term-jwt">JWT</a></strong>
 </li>
   <li>
-<a name="term-ga4gh-claim"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-ga4gh-claim">GA4GH Claim</a></strong>
+<a name="term-ga4gh-claim"></a><strong><a href="aai-openid-connect-profile#term-ga4gh-claim">GA4GH Claim</a></strong>
 </li>
   <li>
-<a name="term-broker"></a><strong><a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-broker">Broker</a></strong>
+<a name="term-broker"></a><strong><a href="aai-openid-connect-profile#term-broker">Broker</a></strong>
 </li>
 </ul>
 
@@ -221,7 +221,7 @@ MAY also be Visas with <a href="#custom-visa-types">Custom Visa Types</a>.</p>
 
 <h2 id="overview">Overview</h2>
 
-<p>Please see the <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#flow-of-assertions">Flow of Assertions</a>
+<p>Please see the <a href="aai-openid-connect-profile#flow-of-assertions">Flow of Assertions</a>
 section in the GA4GH AAI OIDC Profile specification for an overview of interaction among the specified parties.</p>
 
 <h3 id="general-requirements">General Requirements</h3>
@@ -351,14 +351,14 @@ Claim</a> section of the specification.</p>
 <ul>
   <li>
     <p>Visas MUST conform to one of the
-<a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-issued-by-visa-issuer">GA4GH AAI Specification Visa formats</a>
+<a href="aai-openid-connect-profile#visa-issued-by-visa-issuer">GA4GH AAI Specification Visa formats</a>
 as JWS Compact Serialization strings as defined by <a href="https://tools.ietf.org/html/rfc7515#section-7.1">RFC7515 section
 7.1</a>.</p>
   </li>
   <li>
     <p>Visa Issuers, Brokers, and Passport Clearinghouses
 MUST conform to the
-<a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile">GA4GH AAI Specification</a>
+<a href="aai-openid-connect-profile">GA4GH AAI Specification</a>
 requirements for Visas in their use of Visas.</p>
   </li>
   <li>
@@ -399,7 +399,7 @@ When decoded, their structure is:</p>
 <p>The standard JWT payload claims <code class="language-plaintext highlighter-rouge">iss</code>, <code class="language-plaintext highlighter-rouge">sub</code>, <code class="language-plaintext highlighter-rouge">iat</code>, <code class="language-plaintext highlighter-rouge">exp</code> are all REQUIRED.</p>
 
 <p>One of <code class="language-plaintext highlighter-rouge">scope</code> or <code class="language-plaintext highlighter-rouge">jku</code> MUST be present as described in
-<a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#conformance-for-visa-issuers">Conformance for Visa Issuers</a>
+<a href="aai-openid-connect-profile#conformance-for-visa-issuers">Conformance for Visa Issuers</a>
 within the AAI specification.</p>
 
 <p>Claims within the <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> <a href="#visa-object">Visa Object</a> are as described
@@ -409,9 +409,9 @@ in the <a href="#visa-object-claims">Visa Object Claims</a> section of this spec
 
 <ul>
   <li>OPTIONAL. The value of the <code class="language-plaintext highlighter-rouge">typ</code> header claim is RECOMMENDED to be <code class="language-plaintext highlighter-rouge">vnd.ga4gh.visa+jwt</code>
-for <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-document-token-format">Visa Document Token Format</a>
+for <a href="aai-openid-connect-profile#visa-document-token-format">Visa Document Token Format</a>
 visas. The value <code class="language-plaintext highlighter-rouge">JWT</code> marking  general JWTs MAY also be used.</li>
-  <li>For <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#visa-access-token-format">Visa Access Token Format</a>
+  <li>For <a href="aai-openid-connect-profile#visa-access-token-format">Visa Access Token Format</a>
 visas the value is unspecified, but it would likely be <code class="language-plaintext highlighter-rouge">at+jwt</code> as required by <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">section 2.1 of RFC 9068</a>
 for JWT access tokens.</li>
   <li>The <code class="language-plaintext highlighter-rouge">typ</code> header claim is specified by <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-5.1">section 5.1 of JWT RFC</a>
@@ -427,7 +427,7 @@ Then <a href="https://www.rfc-editor.org/rfc/rfc7515.html#section-4.1.9">section
 <h4 id="alg">“<strong>alg</strong>”</h4>
 
 <ul>
-  <li>REQUIRED.The section <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#signing-algorithms">Signing Algorithms</a>
+  <li>REQUIRED.The section <a href="aai-openid-connect-profile#signing-algorithms">Signing Algorithms</a>
 in the AAI specification lists possible algorithms used in the <code class="language-plaintext highlighter-rouge">alg</code> header claim.</li>
 </ul>
 
@@ -1420,7 +1420,7 @@ maxAuthzTTL as per Option A, then the check can be simplified:</p>
 <ul>
   <li>
     <p><code class="language-plaintext highlighter-rouge">accessTokenTTL</code> represents the duration for which an access token will be
-accepted and is bounded by the next refresh token cycle or <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#at-polling">Access Token
+accepted and is bounded by the next refresh token cycle or <a href="aai-openid-connect-profile#at-polling">Access Token
 Polling</a>
 cycle or any larger propagation delay before access is revoked, which
 needs to be assessed based on the revocation model.</p>
@@ -1441,7 +1441,7 @@ the access policy.</p>
 
 <h2 id="token-revocation">Token Revocation</h2>
 
-<p>As per the <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#token-revocation">GA4GH AAI Specification on Token
+<p>As per the <a href="aai-openid-connect-profile#token-revocation">GA4GH AAI Specification on Token
 Revocation</a>,
 the following mechanisms are available within Visa:</p>
 
@@ -1465,9 +1465,9 @@ changes may also require some reasonable delay.</p>
 <p>Systems employing Visas MUST provide mechanisms to
 limit the life of access, and specifically MUST conform to the GA4GH AAI
 Specification requirements in this regard. Systems utilizing Visas MAY also
-employ other mechanisms outlined in the GA4GH AAI Specification, such as <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#at-polling">Access
+employ other mechanisms outlined in the GA4GH AAI Specification, such as <a href="aai-openid-connect-profile#at-polling">Access
 Token Polling</a>
-if the Visa is encoded as a <a href="https://ga4gh.github.io/data-security/aai-openid-connect-profile#term-visa-access-token-format">Visa Access Token</a>.</p>
+if the Visa is encoded as a <a href="aai-openid-connect-profile#term-visa-access-token-format">Visa Access Token</a>.</p>
 
 <h2 id="example-passport-claim">Example Passport Claim</h2>
 
@@ -1639,7 +1639,7 @@ reader-friendly.</p>
 
       </div>
     </main><footer class="site-footer h-card">
-  <data class="u-url" href="/data-security/"></data>
+  <data class="u-url" href="/aai/"></data>
 
   <div class="wrapper">
 
