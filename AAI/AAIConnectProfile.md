@@ -154,6 +154,9 @@ It is RECOMMENDED that Passport-Scoped Access Tokens follow the JWT Profile for 
 <a name="term-passport-issuer"></a> **Passport Issuer** --
 A service that creates and signs [Passports](#term-passport).
 
+<a name="term-task-specific-token"></a> **Task-Specific Token** --
+An opaque token that is used to represent a [Client](#term-client) request that is associated with a subset of [Visas](#term-visa) in a user's [Passport](#term-passport). Obtained via [Token Exchange](#term-token-exhange) from a Passport or other Task-Specific Token.
+
 <a name="term-token-endpoint"></a> **Token Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
 
 <a name="term-token-exchange"></a> **Token Exchange** --
@@ -267,12 +270,24 @@ Internet Assigned Numbers Authority
 
 ## Overview of Interactions
 
-### Full Login and Token Exchange Interaction
-
-In the full token exchange flow recommended in this document, the client does not ever distribute the initial
+In the flow recommended in this document, the Client does not ever distribute an initial
 *Passport-Scoped Access Token* to other services. A token exchange operation is executed by the client, in
-exchange for a *Passport* JWT that may be used downstream to access resources. In this example flow, the
-*Passport* is included as authorization in the POST to a Clearinghouse that holds data.
+exchange for a *Passport* JWT that may be either (1) forwarded downstream to access resources or (2) exchanged for an opaque
+*Task-Specific Token*. In either case, the Client may choose for a subset of Visas to be sent to downstream services--directly via forwarding of a de-scoped Passport JWT, or indirectly
+through a Task-Specific Token that only enables access to a subset of Visas.
+
+In AAI v1.1+, a Passport holder directly *pushes* visas to the Clearinghouse, bypassing the Broker.  The inclusion of Task-Specific Tokens in AAI v2.0 represents a shift
+back toward the AAI v1.0 architecture--where a Clearinghouse *pulls* visas from the Broker prior to making a decision. A key design decision for AAI v2.0, however, is that the Task-Specific Token
+may be scoped to the specific subset of Visas required for a particular task--reducing disclosure of user information to downstream services while shifting the burden of transferring a potentially
+large set of Visas to backend communications that do not require fundamental changes to user-facing APIs. In other words, a Task-Specific Token would allow use of GET-based API requests even when many Visas
+are needed to complete the request.
+
+* NOTE: We assume that the Broker and Passport Issuer are the same in this section (the "Broker"). In general, this may
+not be the case but simplifies the exposition. The Profile Requirements Section differentiates requirements for the two roles.
+
+### Direct Forwarding of Passports
+
+In this example flow, the *Client* sends a passport directly to downstream services--i.e., the *Passport* is included as authorization in the POST to a Clearinghouse that holds data.
 
 {% plantuml %}
 
@@ -286,7 +301,7 @@ participant Client                      as client
 end box
 
 box "AAI"
-participant "Broker and Passport Issuer"                      as broker
+participant "Broker (and Passport Issuer)"                      as broker
 end box
 
 box "Data Access Committee"
@@ -326,14 +341,247 @@ client <- clearing : Clearinghouse responds with data
 
 {% endplantuml %}
 
-Notable differences between this diagram and interaction specified in AAI/Passport v1.0:
-* The Passport Clearinghouse is no longer required to be a Client of the Broker
-* The Passport-Scoped Access Token is only ever shared between the Client and the Broker
-* An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-  which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's
-  Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
+The Client may also exchange a Passport-Scoped Access Token for a Passport that contains a subset of Visas. For example, it may submit the following request to the Broker and Passport Issuer's /token endpoint:
 
-### Flow of Assertions
+```
+POST https://broker.example.org/token
+Content-Type: application/x-www-form-urlencoded
+
+
+grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+&subject_token=<passport-scoped access token>
+&subject_token_type=urn:ietf:params:oauth:token-type:access_token
+&requested_token_type=urn:ga4gh:params:oauth:token-type:passport
+&audience=https://wes.example.org
+&requested_visa_sig=2R0wiAvPiktq5cbRd1Tfh3mCNtQ4CSsnKd8GQ9xmt1Q
+&requested_visa_sig=r3OwbeMZ38Dz7tS5zEp8XVFFyN0j7BuoMdXjGZo40Xi
+```
+
+The Client, in turn, would receive a de-scoped Passport JWT. Note that we assume that the Client has *already received* the user's full Passport via another token exchange operation (i.e., as in the above figure), allowing it to specify specific Visas via their signatures. Exchanging a Passport for a Passport adds an additional communication exchange
+with the Broker, but allows the burden of Visa filtering to lie with the Client--which has direct knowledge of the specific use for the de-scoped Passport.
+
+This "direct forwarding" flow, that of sending a Passport JWT to downstream services, has the advantage of allowing the Client to cache a Passport and present it to multiple downstream services
+without further consultation with the Broker (i.e., the Passport Clearinghouse is no longer required to be a Client of the Broker). A receiver of a Passport can then verify authenticity via associated Passport
+and Visa signing keys and the various expiration times.
+
+There are several tradeoffs with this approach, however:
+* Large Passports may exceed the size of headers for HTTP GET requests, requiring API modifications to support POSTing of Passports. This is especially relevant for read-only operations that would typically be GET-based.
+* If a service forwards a Passport to another service, a Clearinghouse is unable to trace the provenance of a request back to the original Client.
+* Revocation of Passports and Visas are more dependent on their expiration claims, due to fewer Broker interactions.
+
+### Task-Specific Tokens
+To improve the auditability of authorization flows, speed revocations, and address the "large Passport" problem, AAI v2.0 introduces the concept of Task-Specific Tokens--opaque identifiers that represent a de-scoped version of
+a Passport. This necessarily shifts additional communication burden back to the Broker as services that receive a token
+must communicate with the Broker to introspect the token and determine (1) token validity and (2) the set of Visas associated with the token.
+
+<img title="lifecycle" alt="lifecycle" width="50%" src="AAI/assets/TSTs_basic_example.png">
+
+As a motivating example, consider the situation where a Client would like to instantiate a workflow on behalf of a user:
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+package "Executing a Workflow with GA4GH Services" {
+component "<b>Client</b>\napplication" as Client
+component "<b>GA4GH WES</b>\nservice" as WES
+component "<b>GA4GH TES 1</b>\nservice" as TES1
+component "<b>GA4GH TES 2</b>\nservice" as TES2
+component "<b>GA4GH DRS 1 w/</b>\n<b>Passport Clearinghouse</b>\nservice" as DRS1
+component "<b>GA4GH DRS 2 w/</b>\n<b>Passport Clearinghouse</b>\nservice" as DRS2
+}
+
+Client --> WES
+WES --> TES1
+WES --> TES2
+TES1 --> DRS1
+TES2 --> DRS2
+@enduml
+
+In the above example, the Clients send a request to start a workflow to a [GA4GH Workflow Execution Service (WES)](https://www.ga4gh.org/product/workflow-execution-service-wes/) endpoint.
+The WES server, in turn, sends two workflow tasks to different [GA4GH Task Execution Service (TES)](https://www.ga4gh.org/product/task-execution-service-tes/) endpoints.
+Finally, to finish their tasks the TES servers access data through two [GA4GH Data Repository Service (DRS)](https://www.ga4gh.org/product/data-repository-service-drs/) endpoints that have
+associated Passport Clearinghouses that are used to make access decisions to specific datasets based on Visas within the user's Passport. Note there are two different types of services in this flow:
+*orchestration intermediaries* such as WES and TES that may not need to know specifics about a user's Visas, and *authorization consumers* (e.g., DRS) that need Visas to make access decisions.
+
+In the case of direct forwarding of Passports, the Client would send the (potentially de-scoped) Passport JWT to WES, which would possibly de-scope it again before forwarding to the TES services. An alternative
+approach would be for the Client to exchange the Passport-Scoped Access Token for a Task-Specific Token that has a limited scope:
+
+```
+POST https://broker.example.org/token
+Content-Type: application/x-www-form-urlencoded
+
+
+grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+&subject_token=<passport-scoped access token>
+&subject_token_type=urn:ietf:params:oauth:token-type:access_token
+&requested_token_type=urn:ga4gh:params:oauth:token-type:task_specific
+&audience=https://wes.example.org
+&allow_delegation=true
+&requested_visa_sig=2R0wiAvPiktq5cbRd1Tfh3mCNtQ4CSsnKd8GQ9xmt1Q
+&requested_visa_sig=r3OwbeMZ38Dz7tS5zEp8XVFFyN0j7BuoMdXjGZo40Xi
+```
+Note that this example also assumes that a Client has already received a user's Passport to be able to identify specific Visas via their signatures, similar to the situation of obtaining a de-scoped Passport in the Direct Forwarding interaction. In this situation, however, the Client receives an opaque token (i.e., of fixed size and of no inherent informational value to the Client) as a response from the Broker:
+```
+{
+  "access_token": "uY29ssbFm3_Kq7Pk2zH8dR4tNwXvL6aE",
+  "token_type": "Bearer",
+  "issued_token_type": "urn:ga4gh:params:oauth:token-type:task_specific",
+  "expires_in": 3600,
+  "scope": "ga4gh_passport_v1"
+}
+```
+
+There are some interesting aspects of the initial token exchange request:
+* The Client specifies the specific *audience* for the token, such as the hostname of the WES server. According to RFX 8693, the *resource* claim may be used in a similar
+manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this audience information will be stored by the Broker and used to make introspection decisions.
+ * Note that the Broker must have some method of identifying a particular service as identified via *audience* or *resource* so as to enforce use of a Task-Specific Token only
+ by intended services. This could be implemented via the client credentials flow with basic authentication (i.e., a client_id and client_secret) or a private keypair (RFC 6749, Section 4.4). We consider the details of implementing client credentials
+ within a particular ecosystem, e.g., managing service registration and key management, as decisions that are outside of this specification.
+* We see a new value of *requested_token_type*, *task_specific*.
+* The Client is explicitly allowing the audience to exchange the token for other tokens via the *allow_delegation* claim, either with different audiences or for fewer Visas. We the behavior of this
+claim is such that it is consumed at each token exchange step--i.e,. each token exchange MUST set *allow_delegation* to be true for the receiving service to be able to perform a downstream exchange.
+
+After receiving the Task-Specific Token, the Client (or another downstream service) may send API requests that include it. This may be done using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. This said, use of the Authorization field may be problematic in general as the Client may need to perform a third-party OIDC exchange to obtain a token that specifically grants it access to the downstream API. In this case, the TST could be included in API requests as a claim within a fixed-size JWT that is sent via an optional *GA4GH-Workflow-Context* field within the HTTP header. For example, the structure of this JWT could be:
+
+```
+{
+  "iss": "https://client.example.org",
+  "iat": 1234567890,
+  "exp": 1234567890,
+  "task_token_issuer": "https://broker.example.org",
+  "tst": "uY29ssbFm3_Kq7pk2zH8dR4tNwXvLoaE"
+}
+```
+We note that support for *GA4GH-Workflow-Context* would require a small change to the user-facing API of receiving services (e.g., DRS or WES), but argue that this change would require lower effort than modifications to support POSTing passports for read-only operations. Further, by keeping this JWT constant size we preserve the goal of not having API requests scale in size with the scope of the request's authorizations (i.e., the applicable visas). With support for this field, a Client can send a token to access the receiving service via the typical Authorization field while also sending along a reference to the authorization scope of the request (i.e., the TST).
+
+
+Once the Task-Specific Token is received (either via the Authorization field or an optional *GA4GH-Workflow-Context* header field, the receiving service can verify the Task-Specific Token via the Broker's /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection) or simply forward it along without introspection. The following figure illustrates a scenario where WES, TES, and DRS are used to execute a federated learning workflow by passing along a TST. As we note later, this TST may be the original one issued to the client, or a TST what was issued to a downstream service (e.g., WES or TES) that reduces the scope of the token (either Visas or *audience*/*resources*) further. Note that this is another situation where some service-to-service authentication is required--the receiving service should never blindly follow the issuer URL in search of an introspection endpoint. Instead, the URL used be used as an internal lookup for a known broker that is associated with trusted endpoint information.
+
+<img title="lifecycle" alt="lifecycle" width="70%" src="AAI/assets/federated_learning_w_TSTs.png">
+
+An example introspection request is as follows:
+```
+POST https://broker.example.org/introspect
+Content-Type: application/x-www-form-urlencoded
+
+token=<task-specific-token>
+claims=false
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+client_assertion=<signed-jwt>
+```
+where the *client_assertion* JWT is of the following form, and signed by the service's private key:
+```
+{
+  "iss": "https://wes.example.org",
+  "sub": "https://wes.example.org",
+  "aud": "https://broker.example.org/introspect",
+  "iat": 1234567900,
+  "exp": 1234567960
+}
+```
+Upon receiving this request, the Broker is able to retrieve the service's public key and verify the signature on the *client_assertion* JWT and also determine that
+the holder of the Task-Specific Token aligns with the specific *audience*/*resources* requirements of the token creation request. Note that example assumes implementation of client credentials via a keypair, other approaches could be via basic authorization or POSTing the client_id and client_secret as part of the introspection request. The *claims* key in the introspection request indicates
+if the requestor is requesting the set of GA4GH Visas associated with the token. When *claims* is false,
+the /introspect endpoint returns
+```
+{
+  "active": true,
+  "sub": "user-id",
+  "client_id": "https://client.example.org",
+  "aud": "https://wes.example.org",
+  "token_type": "Bearer",
+  "exp": 1234571490,
+  "iat": 1234567890,
+  "issued_token_type": "urn:ga4gh:params:oauth:token-type:task_specific",
+  "act": {
+    "sub": "https://client.example.org"
+  }
+}
+```
+If Visas are required, the introspection request returns:
+```
+{
+  "active": true,
+  "sub": "user-id",
+  "aud": "https://drs1.example.org",
+  "act": {
+    "sub": "https://tes1.example.org",
+    "act": {
+      "sub": "https://wes.example.org",
+      "act": {
+        "sub": "https://client.example.org"
+      }
+    }
+  },
+  "ga4gh_passport_v1": [
+    "<visa-jwt-1>",
+    "<visa-jwt-2>"
+  ]
+}
+```
+Note that this response includes an *act* claim that implies a chain of token exchanges (see sequence diagram, below).
+
+{% plantuml %}
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant "Broker (and Passport Issuer)"                      as broker
+end box
+
+box "Orchestrating Intermediaries"
+participant "WES"            as wes
+participant "TES"           as tes
+end box
+
+box "Data Holder (DRS)"
+participant "Passport Clearinghouse"            as clearing
+end box
+
+==OIDC and Obtain Passport==
+
+user -> client : Initiates login
+ref over user, client, broker
+OIDC flow to authenticate user (potentially with external IdP)
+end ref
+broker -> client : Respond with Passport-Scoped Access Token (PSAT)
+client -> broker : Request to exchange PSAT for Passport
+client <- broker : Response with Passport
+
+==Task-Specific Tokens==
+user -> client : Initiates workflow
+client -> broker : Exchange PSAT for Task-Specific Token (TST) with audience=WES, allow_delgation=true
+client <- broker : Response with TST
+client -> wes : Sends workflow request and TST
+
+wes -> broker : Exchange TST for new TST with audience=TES1, allow_delegation=true
+wes <- broker : Response with TST
+wes -> tes : Sends task request and TST
+
+tes -> broker : Exchange TST for new TST with audience=DRS1, allow_delegation=false
+tes <- broker : Response with TST
+tes -> clearing : Requests data with TST
+clearing -> broker : Sends introspection request with TST
+clearing <- broker : Returns Visas
+tes <- clearing : Clearinghouse makes access decision and responds with data
+
+{% endplantuml %}
+
+Each exchange is tracked by the Broker as indicated by the *aud* claim--showing a chain of delegation from the client to a TES server, which uses the final Task-Specific Token to access data via DRS. See RFC 8693 (OAuth 2.0 Token Exchange) for details on the use of *aud*.  Some additional points:
+* If an orchestrating intermediary is only creating a new token for downstream use (e.g., to update the *audience*), it does not need to make an explicit introspection request prior to a token exchange. Instead, it has two options:
+  * It could submit a token exchange request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service. This is shown in the above diagram.
+  * The above example, with multiple token exchanges used to establish a chain of delegation, could be simplified by the Client including the required TES and DRS servers in *audience* during the first token exchange request. The orchestrating intermediary could then forward the TST without changes, assuming that an invalid token would be detected by an authorization consumer later.
+* Internally, the Broker maintains a mapping between Task-Specific Token requests, Visas, and registered services.
+
+## Flow of Assertions
 
 @startuml
 package "Flow of assertions" {
@@ -941,6 +1189,7 @@ into consideration. Of special concern are:
 
 | Version       | Date    | Editor                                                                | Notes                                                                            |
 |---------------|---------|-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| 2.0.0 | 2026-07 | Andrew Gearhart, Tom Conner, Jaime Delgado | Refactors documentation, adds new features (e.g.,task-specific tokens) |
 | 1.2.0 | 2023-01 | Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley | Introduce token exchange and Passport format, incorporate Visas, update diagrams |
 | 1.1.0         | 2021-07 | Craig Voisin                                                          | *abandoned* version now reserved, new concepts moved to v1.2                     |
 | 1.0.4         | 2021-07 | Craig Voisin                                                          | Improve existing terminology and define Passport and Visa JWTs                   |
