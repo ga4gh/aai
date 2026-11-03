@@ -12,7 +12,7 @@ RUN \
   apk add --no-cache graphviz wget ca-certificates ttf-dejavu fontconfig build-base openjdk11 && \
   wget "http://downloads.sourceforge.net/project/plantuml/${PLANTUML_VERSION}/plantuml.${PLANTUML_VERSION}.jar" -O /usr/bin/plantuml.jar
 
-EXPOSE 4000/tcp
+EXPOSE 8444/tcp
 
 #gem update --system 3.4.13 \
 

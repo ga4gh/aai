@@ -11,7 +11,7 @@ STAMP_DIR=$(BUILDER)/stamps
 serve: $(BUILDER)
 	docker run --rm -it \
                --volume="$(ROOT_DIR):/srv/jekyll" \
-               --env JEKYLL_ENV=development -p 4000:4000 \
+               --env JEKYLL_ENV=development -p 8444:8444 \
                $(BUILDER) ./install-and-serve
 
 $(BUILDER): $(STAMP_DIR)/$(BUILDER)

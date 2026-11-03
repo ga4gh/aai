@@ -5,7 +5,7 @@ permalink: changes-1_2
 ---
 
 This document lists changes between 
- * GA4GH AAI OIDC Profile [1.0.0](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) and [1.2](https://ga4gh.github.io/data-security/aai-openid-connect-profile)
+ * GA4GH AAI OIDC Profile [1.0.0](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) and [1.2](aai-openid-connect-profile)
  * GA4GH Passport [1.0.0](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/v1.0.0/researcher_ids/ga4gh_passport_v1.md) and 1.2
 
 ### Table of Contents
