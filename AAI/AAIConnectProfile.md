@@ -565,7 +565,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
             checks outlined elsewhere in this specification still apply.
         5.  [Visas](#term-visa) MUST be signed with a [conformant signing algorithm](#signing-algorithms).
         6.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
-            a space-delimited substring of the `scope` JWT [Claim](#term-claim).
+            one of its space-separated values.
         7.  Payload [Claims](#term-claim) are specified in
             [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
@@ -814,8 +814,10 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
  <additional claims>
 }
 ```
--   `iss`: REQUIRED. MUST be able to be appended with
-    `.well-known/openid-configuration` to get spec of Broker.
+-   `iss`: REQUIRED. The issuer identifier of the Broker. It MUST be a value from which
+    the Broker's OpenID Provider Configuration can be retrieved as defined by
+    [[OIDC-Discovery]](#ref-oidc-discovery): remove any trailing `/` from the value, then append
+    `/.well-known/openid-configuration`.
 
 -   `sub`: REQUIRED. Authenticated user unique identifier.
 
