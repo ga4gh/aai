@@ -201,6 +201,10 @@ client <- clearing : Client is given data
 
 **This flow is the flow for v1.0 implementations of the specification.**
 
+<p class="deprecation">This flow, in which the <i>Passport-Scoped Access Token</i> is handed to a downstream
+Passport Clearinghouse, is deprecated as of version 1.3 and is targeted for removal in version 2.0.
+Use the <a href="#what-is-the-complete-end-to-end-flow-using-token-exchange">token exchange flow</a> instead.</p>
+
 The flow as used by Elixir uses the initial *Passport-Scoped Access Token* as
 a token handed to downstream resource servers. These servers can use this token, in conjunction
 with a callback to the broker's *Userinfo Endpoint*, to obtain the *Passport* content in
