@@ -730,15 +730,19 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
-6.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
-    including Visas, to occasionally check which Visas are still valid
+6.  <a name="at-polling"></a> **Access Token Polling**: Passport Clearinghouses MAY use access tokens,
+    including Visa Access Tokens, to occasionally check which Visas are still valid
     at the associated Token or UserInfo Endpoint in order to establish
     whether the user still meets the access requirements.
+
+    <p class="deprecation">Access Token Polling applies only to the access token flow and to
+    <a href="#term-visa-access-token">Visa Access Tokens</a>, both of which are deprecated as of version 1.3 and
+    targeted for removal in version 2.0. It is deprecated along with them.</p>
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
     per Passport Clearinghouse. Any request retries MUST include exponential backoff
     delays based on best practices (e.g. include appropriate jitter). At a
-    minimum, the client MUST stop checking once any of the following occurs:
+    minimum, the Passport Clearinghouse MUST stop checking once any of the following occurs:
 
     1.  The system can reasonably determine that authorization related to these
         [Claims](#term-claim) is no longer needed by the user. For example, all downstream cloud
@@ -748,18 +752,18 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 
     2.  The JWT access token has expired as per the `exp` field.
 
-    3.  The client has detected that the user owning the identity or a system
+    3.  The Passport Clearinghouse has detected that the user owning the identity or a system
         administrator has revoked the access token or a refresh token related to
         minting the access token.
 
     4.  The endpoint returns an HTTP status that is not retryable, e.g. HTTP status 400.
 
-    5.  If the endpoint returns an updated set of Visas (this is
-        an OPTIONAL feature of a Visa Issuer), then the Passport
-        Clearinghouse MUST use the updated Visas and ignore the original
-        GA4GH Claim values in the Visa Access Token. If the Passport
-        Clearinghouse is unable to adjust for the updated Visas, then
-        it MUST act as though the token was revoked.
+    If the endpoint returns an updated set of Visas (this is
+    an OPTIONAL feature of a Visa Issuer), then the Passport
+    Clearinghouse MUST use the updated Visas and ignore the original
+    GA4GH Claim values in the Visa Access Token. If the Passport
+    Clearinghouse is unable to adjust for the updated Visas, then
+    it MUST act as though the token was revoked.
 
 {% hr2 %}
 
