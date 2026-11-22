@@ -681,10 +681,16 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
     2.  The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker.
 
 2.  Passport Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to Visas OR MUST process Passports directly.
+    New Passport Clearinghouses SHOULD process Passports.
 
-    1.  For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
+    <p class="deprecation">Processing <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
+    (the access token flow) is deprecated as of version 1.3 and is targeted for removal in version 2.0,
+    where Passport Clearinghouses will only process Passports. The Passport-Scoped Access Token is intended to
+    be shared only between the Client and the Broker that issued it, so Clients SHOULD NOT send it to other
+    services where a Passport can be used instead.</p>
+
+    1.  For access token flows (deprecated), Passport Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
-
 
     2. For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.
 
