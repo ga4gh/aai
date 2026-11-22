@@ -454,11 +454,15 @@ Clients are applications which want to access data on behalf of users, and are r
 3.  Clients MUST provide protection against client attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
+    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+
 {% hr3 %}
 
 ### Conformance for Brokers
 Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens
 and access_tokens (and potentially refresh tokens) for consumption within the GA4GH compliant environment.
+This document _does not_ specify how a Broker obtains Visas contained in a Passport or returned from the
+UserInfo Endpoint.
 
 1. Broker MUST be an OpenID Provider
 
@@ -491,17 +495,13 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
        the UserInfo endpoint MUST provide [Visas](#term-visa) as described in the section
        [Visas provided by a Broker via UserInfo Endpoint](#visas-provided-by-a-broker-via-userinfo-endpoint).
 
-3.  Brokers operate downstream from IdPs or provide their own IdP service. They
-    issue id_tokens and access_tokens (and potentially refresh tokens) for
-    consumption within the GA4GH compliant environment.
-
-4.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described
+3.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described
     for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
 
-5.  Broker MUST provide protection against attacks as outlined in
+4.  Broker MUST provide protection against attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
-6.  The user represented by the identity of the access token MUST have agreed to
+5.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens.
     Brokers MUST adhere to
     [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
@@ -524,7 +524,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-7.  When a Broker acts as a Visa Issuer then it MUST adhere to the [Conformance
+6.  When a Broker acts as a Visa Issuer then it MUST adhere to the [Conformance
     for Visa Issuers](#conformance-for-visa-issuers) section of this
     specification.
 
@@ -540,9 +540,8 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 ### Conformance for Visa Issuers
 
 Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
-to justify granting access to data. This specification defines the format of the Visas and endpoints Visa Issuers
-should have in order for Passport Clearinghouses to validate those Visas. This document _does not_ specify how a Broker
-obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
+to justify granting access to data. This specification defines the format of the Visas and how Passport Clearinghouses
+find the public keys they need in order to validate those Visas.
 
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
@@ -692,7 +691,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 4.  Passport Clearinghouses MUST provide protection against attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
-    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties.
 
 5.  If making use of [Visas](#term-visa):
 
