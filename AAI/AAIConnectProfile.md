@@ -688,8 +688,9 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
     New Passport Clearinghouses SHOULD process Passports.
 
     <p class="deprecation">Processing <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
-    (the access token flow) is deprecated as of version 1.3 and is targeted for removal in version 2.0,
-    where Passport Clearinghouses will only process Passports. The Passport-Scoped Access Token is intended to
+    (the access token flow) is deprecated as of version 1.3 and is targeted for removal in version 2.0.
+    Passport Clearinghouses should be prepared to rely on Passports, or on other token types that later
+    versions define, instead of access tokens. The Passport-Scoped Access Token is intended to
     be shared only between the Client and the Broker that issued it, so Clients SHOULD NOT send it to other
     services where a Passport can be used instead.</p>
 
