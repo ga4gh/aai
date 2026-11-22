@@ -240,6 +240,10 @@ Internet Assigned Numbers Authority
         members of this JSON object. The JWTs specified here follow the JWS
         specification [[RFC7515]](#ref-rfc7515).
 
+<a name="ref-aai-1-0"></a>
+[[AAI-1.0]](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) -- GA4GH AAI OpenID Connect Profile,
+version 1.0. Referenced for the [Visa Access Token](#term-visa-access-token) format.
+
 <a name="ref-rfc7636"></a>
 [[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE)
 
@@ -574,10 +578,10 @@ find the public keys they need in order to validate those Visas.
     2. <a name="term-visa-access-token"></a> <a name="visa-access-token-format"></a> <a name="term-visa-access-token-format"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
+       be used as a Visa. Details are specified in the AAI Profile 1.0 specification [[AAI-1.0]](#ref-aai-1-0).
 
-    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-     version of the specification. Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
+    <p class="deprecation">The <b>Visa Access Token</b> is deprecated as of version 1.3 and is targeted for removal
+     in version 2.0 (it was proposed for removal in version 1.2). Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
      as <b>Visa Document Token</b>s.</p>
 
 2. By signing a Visa, a Visa Issuer asserts that
