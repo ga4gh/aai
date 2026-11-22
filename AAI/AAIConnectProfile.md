@@ -320,7 +320,9 @@ client <- broker : Response with Passport
 
 user -> client : User initiates action requiring data
 client -> clearing : Client requests data with Passport
-clearing -> issuer : Request public keys
+clearing -> broker : Request Broker's public keys (for the Passport signature)
+broker -> clearing : Respond with public keys
+clearing -> issuer : Request Visa Issuer's public keys (for each Visa signature)
 issuer -> clearing : Respond with public keys
 client <- clearing : Clearinghouse responds with data
 
@@ -330,8 +332,9 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 * The Passport Clearinghouse is no longer required to be a Client of the Broker
 * The Passport-Scoped Access Token is only ever shared between the Client and the Broker
 * An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-  which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's
-  Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
+  which can be sent to a Passport Clearinghouse. The Passport Token carries the authorization in a user's
+  Visas. The Passport-Scoped Access Token does not contain Visas or other [GA4GH Claims](#term-ga4gh-claim); it is
+  only useful to the Broker, whose Token and UserInfo Endpoints accept it.
 
 ### Flow of Assertions
 
