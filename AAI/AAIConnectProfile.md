@@ -157,7 +157,7 @@ A service that creates and signs [Passports](#term-passport).
 <a name="term-token-endpoint"></a> **Token Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
 
 <a name="term-token-exchange"></a> **Token Exchange** --
-The protocol defined in [[RFC 8693]](#ref-rfc8693) as an extension of OAuth 2.0
+The protocol defined in [[RFC8693]](#ref-rfc8693) as an extension of OAuth 2.0
 for exchanging access tokens for other tokens. A token exchange is performed by calling the [Token Endpoint](#term-token-endpoint).
 
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
@@ -259,7 +259,7 @@ Internet Assigned Numbers Authority
 <a name="ref-draft-ietf-oauth-security-topics"></a>
 [[OAuth-Security-BCP]](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) - Lodderstedt,  T., Bradley, J., Labunets, A., Fett, D., "OAuth 2.0 Security Best Current Practice", draft-ietf-oauth-security-topics-29, June 2024.
 
-<a name="ref-rfc9068">
+<a name="ref-rfc9068"></a>
 [[RFC9068]](https://datatracker.ietf.org/doc/html/rfc9068) --  JWT Profile for OAuth 2.0 Access Tokens
 
 
@@ -435,7 +435,7 @@ Clients are applications which want to access data on behalf of users, and are r
         Flow (see OIDC Basic Client Implementer's Guide 1.0 [[OIDC-Client]](#ref-oidc-client)).
 
    2. Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow
-        with [[PKCE]](#ref-rfc7636).
+        with [[RFC7636]](#ref-rfc7636).
 
 2.  Protection of Confidential Information
 
@@ -454,11 +454,15 @@ Clients are applications which want to access data on behalf of users, and are r
 3.  Clients MUST provide protection against client attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
+    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+
 {% hr3 %}
 
 ### Conformance for Brokers
 Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens
 and access_tokens (and potentially refresh tokens) for consumption within the GA4GH compliant environment.
+This document _does not_ specify how a Broker obtains Visas contained in a Passport or returned from the
+UserInfo Endpoint.
 
 1. Broker MUST be an OpenID Provider
 
@@ -487,21 +491,17 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in
        preference to the UserInfo Endpoint.
 
-    2. When presented with a valid [Passport-scoped Access Token](#term-passport-scoped-access-token),
+    2. When presented with a valid [Passport-Scoped Access Token](#term-passport-scoped-access-token),
        the UserInfo endpoint MUST provide [Visas](#term-visa) as described in the section
        [Visas provided by a Broker via UserInfo Endpoint](#visas-provided-by-a-broker-via-userinfo-endpoint).
 
-3.  Brokers operate downstream from IdPs or provide their own IdP service. They
-    issue id_tokens and access_tokens (and potentially refresh tokens) for
-    consumption within the GA4GH compliant environment.
-
-4.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described
+3.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described
     for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
 
-5.  Broker MUST provide protection against attacks as outlined in
+4.  Broker MUST provide protection against attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
-6.  The user represented by the identity of the access token MUST have agreed to
+5.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens.
     Brokers MUST adhere to
     [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
@@ -524,7 +524,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-7.  When a Broker acts as a Visa Issuer then it MUST adhere to the [Conformance
+6.  When a Broker acts as a Visa Issuer then it MUST adhere to the [Conformance
     for Visa Issuers](#conformance-for-visa-issuers) section of this
     specification.
 
@@ -540,9 +540,8 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 ### Conformance for Visa Issuers
 
 Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
-to justify granting access to data. This specification defines the format of the Visas and endpoints Visa Issuers
-should have in order for Passport Clearinghouses to validate those Visas. This document _does not_ specify how a Broker
-obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
+to justify granting access to data. This specification defines the format of the Visas and how Passport Clearinghouses
+find the public keys they need in order to validate those Visas.
 
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
@@ -565,7 +564,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
             checks outlined elsewhere in this specification still apply.
         5.  [Visas](#term-visa) MUST be signed with a [conformant signing algorithm](#signing-algorithms).
         6.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
-            a space-delimited substring of the `scope` JWT [Claim](#term-claim).
+            one of its space-separated values.
         7.  Payload [Claims](#term-claim) are specified in
             [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
@@ -692,7 +691,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 4.  Passport Clearinghouses MUST provide protection against attacks as outlined in
     [[RFC6819]](#ref-rfc6819).
 
-    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties.
 
 5.  If making use of [Visas](#term-visa):
 
@@ -755,7 +754,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 
 {% hr2 %}
 
-<a name="#ga4gh-jwt-format"><!-- for old links --></a>
+<a name="ga4gh-jwt-format"><!-- for old links --></a>
 ## GA4GH JWT Formats
 
 This specification builds on the JWT format defined in [[RFC7519]](#ref-rfc7519).
@@ -814,8 +813,10 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
  <additional claims>
 }
 ```
--   `iss`: REQUIRED. MUST be able to be appended with
-    `.well-known/openid-configuration` to get spec of Broker.
+-   `iss`: REQUIRED. The issuer identifier of the Broker. It MUST be a value from which
+    the Broker's OpenID Provider Configuration can be retrieved as defined by
+    [[OIDC-Discovery]](#ref-oidc-discovery): remove any trailing `/` from the value, then append
+    `/.well-known/openid-configuration`.
 
 -   `sub`: REQUIRED. Authenticated user unique identifier.
 
