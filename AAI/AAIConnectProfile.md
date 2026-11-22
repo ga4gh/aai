@@ -240,6 +240,10 @@ Internet Assigned Numbers Authority
         members of this JSON object. The JWTs specified here follow the JWS
         specification [[RFC7515]](#ref-rfc7515).
 
+<a name="ref-aai-1-0"></a>
+[[AAI-1.0]](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) -- GA4GH AAI OpenID Connect Profile,
+version 1.0. Referenced for the [Visa Access Token](#term-visa-access-token) format.
+
 <a name="ref-rfc7636"></a>
 [[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE)
 
@@ -320,7 +324,9 @@ client <- broker : Response with Passport
 
 user -> client : User initiates action requiring data
 client -> clearing : Client requests data with Passport
-clearing -> issuer : Request public keys
+clearing -> broker : Request Broker's public keys (for the Passport signature)
+broker -> clearing : Respond with public keys
+clearing -> issuer : Request Visa Issuer's public keys (for each Visa signature)
 issuer -> clearing : Respond with public keys
 client <- clearing : Clearinghouse responds with data
 
@@ -330,8 +336,9 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 * The Passport Clearinghouse is no longer required to be a Client of the Broker
 * The Passport-Scoped Access Token is only ever shared between the Client and the Broker
 * An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-  which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's
-  Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
+  which can be sent to a Passport Clearinghouse. The Passport Token carries the authorization in a user's
+  Visas. The Passport-Scoped Access Token does not contain Visas or other [GA4GH Claims](#term-ga4gh-claim); it is
+  only useful to the Broker, whose Token and UserInfo Endpoints accept it.
 
 ### Flow of Assertions
 
@@ -571,10 +578,10 @@ find the public keys they need in order to validate those Visas.
     2. <a name="term-visa-access-token"></a> <a name="visa-access-token-format"></a> <a name="term-visa-access-token-format"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
+       be used as a Visa. Details are specified in the AAI Profile 1.0 specification [[AAI-1.0]](#ref-aai-1-0).
 
-    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-     version of the specification. Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
+    <p class="deprecation">The <b>Visa Access Token</b> is deprecated as of version 1.3 and is targeted for removal
+     in version 2.0 (it was proposed for removal in version 1.2). Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
      as <b>Visa Document Token</b>s.</p>
 
 2. By signing a Visa, a Visa Issuer asserts that
@@ -678,10 +685,17 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
     2.  The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker.
 
 2.  Passport Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to Visas OR MUST process Passports directly.
+    New Passport Clearinghouses SHOULD process Passports.
 
-    1.  For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
+    <p class="deprecation">Processing <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
+    (the access token flow) is deprecated as of version 1.3 and is targeted for removal in version 2.0.
+    Passport Clearinghouses should be prepared to rely on Passports, or on other token types that later
+    versions define, instead of access tokens. The Passport-Scoped Access Token is intended to
+    be shared only between the Client and the Broker that issued it, so Clients SHOULD NOT send it to other
+    services where a Passport can be used instead.</p>
+
+    1.  For access token flows (deprecated), Passport Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
-
 
     2. For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.
 
@@ -721,15 +735,19 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
-6.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
-    including Visas, to occasionally check which Visas are still valid
+6.  <a name="at-polling"></a> **Access Token Polling**: Passport Clearinghouses MAY use access tokens,
+    including Visa Access Tokens, to occasionally check which Visas are still valid
     at the associated Token or UserInfo Endpoint in order to establish
     whether the user still meets the access requirements.
+
+    <p class="deprecation">Access Token Polling applies only to the access token flow and to
+    <a href="#term-visa-access-token">Visa Access Tokens</a>, both of which are deprecated as of version 1.3 and
+    targeted for removal in version 2.0. It is deprecated along with them.</p>
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
     per Passport Clearinghouse. Any request retries MUST include exponential backoff
     delays based on best practices (e.g. include appropriate jitter). At a
-    minimum, the client MUST stop checking once any of the following occurs:
+    minimum, the Passport Clearinghouse MUST stop checking once any of the following occurs:
 
     1.  The system can reasonably determine that authorization related to these
         [Claims](#term-claim) is no longer needed by the user. For example, all downstream cloud
@@ -739,18 +757,18 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 
     2.  The JWT access token has expired as per the `exp` field.
 
-    3.  The client has detected that the user owning the identity or a system
+    3.  The Passport Clearinghouse has detected that the user owning the identity or a system
         administrator has revoked the access token or a refresh token related to
         minting the access token.
 
     4.  The endpoint returns an HTTP status that is not retryable, e.g. HTTP status 400.
 
-    5.  If the endpoint returns an updated set of Visas (this is
-        an OPTIONAL feature of a Visa Issuer), then the Passport
-        Clearinghouse MUST use the updated Visas and ignore the original
-        GA4GH Claim values in the Visa Access Token. If the Passport
-        Clearinghouse is unable to adjust for the updated Visas, then
-        it MUST act as though the token was revoked.
+    If the endpoint returns an updated set of Visas (this is
+    an OPTIONAL feature of a Visa Issuer), then the Passport
+    Clearinghouse MUST use the updated Visas and ignore the original
+    GA4GH Claim values in the Visa Access Token. If the Passport
+    Clearinghouse is unable to adjust for the updated Visas, then
+    it MUST act as though the token was revoked.
 
 {% hr2 %}
 
