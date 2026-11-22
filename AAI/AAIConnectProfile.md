@@ -157,7 +157,7 @@ A service that creates and signs [Passports](#term-passport).
 <a name="term-token-endpoint"></a> **Token Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
 
 <a name="term-token-exchange"></a> **Token Exchange** --
-The protocol defined in [[RFC 8693]](#ref-rfc8693) as an extension of OAuth 2.0
+The protocol defined in [[RFC8693]](#ref-rfc8693) as an extension of OAuth 2.0
 for exchanging access tokens for other tokens. A token exchange is performed by calling the [Token Endpoint](#term-token-endpoint).
 
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
@@ -259,7 +259,7 @@ Internet Assigned Numbers Authority
 <a name="ref-draft-ietf-oauth-security-topics"></a>
 [[OAuth-Security-BCP]](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) - Lodderstedt,  T., Bradley, J., Labunets, A., Fett, D., "OAuth 2.0 Security Best Current Practice", draft-ietf-oauth-security-topics-29, June 2024.
 
-<a name="ref-rfc9068">
+<a name="ref-rfc9068"></a>
 [[RFC9068]](https://datatracker.ietf.org/doc/html/rfc9068) --  JWT Profile for OAuth 2.0 Access Tokens
 
 
@@ -435,7 +435,7 @@ Clients are applications which want to access data on behalf of users, and are r
         Flow (see OIDC Basic Client Implementer's Guide 1.0 [[OIDC-Client]](#ref-oidc-client)).
 
    2. Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow
-        with [[PKCE]](#ref-rfc7636).
+        with [[RFC7636]](#ref-rfc7636).
 
 2.  Protection of Confidential Information
 
@@ -487,7 +487,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in
        preference to the UserInfo Endpoint.
 
-    2. When presented with a valid [Passport-scoped Access Token](#term-passport-scoped-access-token),
+    2. When presented with a valid [Passport-Scoped Access Token](#term-passport-scoped-access-token),
        the UserInfo endpoint MUST provide [Visas](#term-visa) as described in the section
        [Visas provided by a Broker via UserInfo Endpoint](#visas-provided-by-a-broker-via-userinfo-endpoint).
 
@@ -755,7 +755,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 
 {% hr2 %}
 
-<a name="#ga4gh-jwt-format"><!-- for old links --></a>
+<a name="ga4gh-jwt-format"><!-- for old links --></a>
 ## GA4GH JWT Formats
 
 This specification builds on the JWT format defined in [[RFC7519]](#ref-rfc7519).
